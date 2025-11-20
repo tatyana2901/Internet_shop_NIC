@@ -3,10 +3,7 @@ package Internet_shop_NIC.Entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "category")
@@ -15,7 +12,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private long category_id;
+    private Long category_id;
     @Column
     private String name;
     @Column
@@ -24,8 +21,8 @@ public class Category {
     @ManyToMany
     @JoinTable(
             name = "category_parent",
-            joinColumns = @JoinColumn(name = "child_id", referencedColumnName = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "parent_id", referencedColumnName = "category_id"))
+            joinColumns = @JoinColumn(name = "child_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id"))
     private List<Category> parents;
 
     @ManyToMany(mappedBy = "parents")
@@ -34,11 +31,11 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private List<Product> products;
 
-    public long getCategory_id() {
+    public Long getCategory_id() {
         return category_id;
     }
 
-    public void setCategory_id(long category_id) {
+    public void setCategory_id(Long category_id) {
         this.category_id = category_id;
     }
 
