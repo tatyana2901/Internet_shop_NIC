@@ -1,4 +1,4 @@
-package project.Internet_shop_NIC;
+package Internet_shop_NIC;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
