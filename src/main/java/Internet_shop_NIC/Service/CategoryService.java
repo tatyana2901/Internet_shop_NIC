@@ -23,30 +23,28 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-  @Transactional
-    public List<CategoryDTO> getFullCategoryTree() {
+
+    public List<CategoryDTO> getRootCategories() {
         List<Category> categories = categoryRepository.findByParentsIsEmpty();
         return categories.stream()
-                .map(this::convertToDto)
+                .map(this::toCategoryDTO)
                 .collect(Collectors.toList());
 
 
     }
 
-    private CategoryDTO convertToDto(Category category) {
-        CategoryDTO dto = new CategoryDTO(category.getCategory_id(), category.getName());
-
-        // Если детей нет - останавливаем рекурсию
-        if (category.getChildren() != null && !category.getChildren().isEmpty()) {
-            List<CategoryDTO> childDtos = category.getChildren().stream()
-                    .map(this::convertToDto)
+    public List<CategoryDTO> getSubCategories(Long parentId) {
+        if (parentId > 0) {
+            return categoryRepository.findByParentsId(parentId).stream()
+                    .map(this::toCategoryDTO)
                     .collect(Collectors.toList());
-            dto.setChildren(childDtos);
-        } else {
-            dto.setChildren(new ArrayList<>()); // явно указываем пустой список
-        }
+        } else throw new IllegalArgumentException("incorrect id");
+    }
 
-        return dto;
+    private CategoryDTO toCategoryDTO(Category category) {
+        if (category != null) {
+            return new CategoryDTO(category.getCategory_id(), category.getName());
+        } else throw new IllegalArgumentException("category is null");
     }
 
 }

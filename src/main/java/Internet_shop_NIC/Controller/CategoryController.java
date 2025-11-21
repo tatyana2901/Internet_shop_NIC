@@ -32,6 +32,6 @@ public class CategoryController {
     public List<CategoryDTO> getG() {
         System.out.println("ЗАПУСК");
 
-        return categoryService.getFullCategoryTree(); // Jackson конвертирует эти объекты в JSON
+        return categoryService.getSubCategories(); // Jackson конвертирует эти объекты в JSON
     }
 }

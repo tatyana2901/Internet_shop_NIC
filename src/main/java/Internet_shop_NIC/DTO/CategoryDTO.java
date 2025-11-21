@@ -1,5 +1,8 @@
 package Internet_shop_NIC.DTO;
 
+import Internet_shop_NIC.Entity.Category;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDTO {
@@ -13,6 +16,7 @@ public class CategoryDTO {
     public CategoryDTO(long id, String name) {
         this.id = id;
         this.name = name;
+        this.children = new ArrayList<>();
     }
 
     public void setId(long id) {
