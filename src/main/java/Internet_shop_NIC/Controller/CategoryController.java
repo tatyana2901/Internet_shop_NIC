@@ -28,7 +28,7 @@ public class CategoryController {
 
 
     @GetMapping()
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryDTO> getRootCategories() {
         return categoryService.getRootCategories();
     }
 
