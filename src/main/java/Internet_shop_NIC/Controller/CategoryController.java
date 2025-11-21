@@ -8,12 +8,14 @@ import Internet_shop_NIC.Service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/categories")
 public class CategoryController {
 
 
@@ -24,14 +26,16 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @Autowired
+
+    @GetMapping()
+    public List<CategoryDTO> getAllCategories() {
+        return categoryService.getRootCategories();
+    }
 
 
-
-    @GetMapping("/")
-    public List<CategoryDTO> getG() {
-        System.out.println("ЗАПУСК");
-
-        return categoryService.getSubCategories(); // Jackson конвертирует эти объекты в JSON
+    @GetMapping("/{id}")
+    public List<CategoryDTO> getSubCategories(@PathVariable("id") Long id) {
+        return categoryService.getSubCategories(id);
     }
 }
+

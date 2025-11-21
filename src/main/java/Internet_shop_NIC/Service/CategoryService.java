@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,12 +35,15 @@ public class CategoryService {
 
     }
 
+    @Transactional // работает и без нее, но непонятно, почему
     public List<CategoryDTO> getSubCategories(Long parentId) {
         if (parentId > 0) {
-            return categoryRepository.findByParentsId(parentId).stream()
+            Optional<Category> categoryOptional = categoryRepository.findById(parentId);
+            return categoryOptional.map(category -> category.getChildren().stream()
                     .map(this::toCategoryDTO)
-                    .collect(Collectors.toList());
-        } else throw new IllegalArgumentException("incorrect id");
+                    .toList()).orElseGet(ArrayList::new);
+        }
+        throw new IllegalArgumentException("parentId is incorrect");
     }
 
     private CategoryDTO toCategoryDTO(Category category) {
