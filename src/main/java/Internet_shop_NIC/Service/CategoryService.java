@@ -2,7 +2,9 @@ package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.CategoryDTO;
 import Internet_shop_NIC.Entity.Category;
+import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Repository.CategoryRepository;
+import Internet_shop_NIC.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
-
     private final CategoryRepository categoryRepository;
 
     @Autowired
@@ -43,35 +44,9 @@ public class CategoryService {
 
     private CategoryDTO toCategoryDTO(Category category) {
         if (category != null) {
-            return new CategoryDTO(category.getCategoryId(), category.getName());
+            return new CategoryDTO(category.getId(), category.getName());
         } else throw new IllegalArgumentException("category is null");
     }
 
-
-   /* public Set<Product> getProductsByCategoryAndSubCat(Long categoryId) {
-        //РЕШИТЬ С СОРТИРОВКОЙ _ КОМПААТОР????
-        Set<Product> products = new HashSet<>();
-
-        if (categoryId > 0) {
-            Optional<Category> optCat = categoryRepository.findById(categoryId);
-
-            if (optCat.isPresent()) {
-                Category category = optCat.get();
-                if (category.getProducts() != null) {
-                    products.addAll(new HashSet<>(category.getProducts()));
-                }
-                if (category.getChildren() != null){
-                    for (Category child : category.getChildren()) {
-                        getProductsByCategoryAndSubCat(child.getCategory_id());
-                    }
-
-                }
-
-
-            }
-
-        }
-
-    }*/
 
 }

@@ -12,7 +12,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long categoryId;
+    private Long id;
     @Column
     private String name;
     @Column
@@ -31,12 +31,12 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private List<Product> products;
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -79,5 +79,11 @@ public class Category {
         this.products = products;
     }
 
-
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
