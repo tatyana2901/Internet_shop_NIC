@@ -22,18 +22,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-/*
-    public Set<Product> getProductsByCategoryAndSubCat(Long categoryId) {
+    public List<Product> getProductsByCategoryAndSubCat(Long categoryId) {
         //РЕШИТЬ С СОРТИРОВКОЙ _ КОМПААТОР????
-        Set<Product> products = new HashSet<>();
-
         if (categoryId > 0) {
-
-            List<Product> rootProducts = productRepository.findByCategoriesId(categoryId);
-
-
+            return productRepository.findProductsByCategoryAndSubcategory(categoryId);
         }
+        throw new IllegalArgumentException("categoryId is incorrect");
+    }
 
-    }*/
+    //метод количества товаров  категории
 
 }
