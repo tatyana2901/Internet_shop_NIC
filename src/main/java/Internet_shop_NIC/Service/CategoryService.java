@@ -36,8 +36,8 @@ public class CategoryService {
         if (parentId > 0) {
             Optional<Category> categoryOptional = categoryRepository.findById(parentId);
             return categoryOptional.map(category -> category.getChildren().stream()
-                    .map(this::toCategoryDTO)
-                    .toList()).orElseGet(ArrayList::new);
+                    .map(this::toCategoryDTO).
+                    collect(Collectors.toList())).orElseGet(ArrayList::new);
         }
         throw new IllegalArgumentException("parentId is incorrect");
     }

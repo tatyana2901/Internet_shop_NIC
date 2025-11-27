@@ -1,5 +1,6 @@
 package Internet_shop_NIC;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,5 +10,6 @@ public class InternetShopNicApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InternetShopNicApplication.class, args);
 	}
+
 
 }
