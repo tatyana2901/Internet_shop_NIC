@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
-
     private final CategoryService categoryService;
 
     @Autowired

@@ -2,14 +2,12 @@ package Internet_shop_NIC.Controller;
 
 import Internet_shop_NIC.DTO.CategoryDTO;
 import Internet_shop_NIC.DTO.ProductCatalogDTO;
+import Internet_shop_NIC.DTO.ProductListingDTO;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,20 +23,17 @@ public class ProductController {
 
 
     //в каталоге
-    @GetMapping("{categoryId}/products")
+    @GetMapping("/categories/{categoryId}/direct_products")
     public List<ProductCatalogDTO> getProductsByCategory(@PathVariable("categoryId") Long categoryId) {
         return productService.getDirectProductsByCategory(categoryId);
     }
 
     //в листинге
-   /* @GetMapping()
-    public String getAllProductsByCategory() {
-
-        System.out.println(productService.getSortedProductsByCategoryAndSubCat(6L));
-
-        return "";
+    @GetMapping("/categories/{categoryId}/products")
+    public List<ProductListingDTO> getAllProductsByCategory(@PathVariable("categoryId") Long categoryId,
+                                                            @RequestParam(defaultValue = "price-asc") String sort) {
+        return productService.getSortedProductsByCategoryAndSubCat(categoryId, sort);
     }
-*/
     //товар по категории
 
 

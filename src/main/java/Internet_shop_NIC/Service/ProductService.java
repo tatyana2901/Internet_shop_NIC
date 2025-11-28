@@ -5,6 +5,7 @@ import Internet_shop_NIC.DTO.ProductListingDTO;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,16 +21,20 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductListingDTO> getSortedProductsByCategoryAndSubCat(Long categoryId) {
-        //РЕШИТЬ С СОРТИРОВКОЙ _ КОМПААТОР????
-        if (categoryId > 0) {
-            List<Product> products = productRepository.findProductsByCategoryAndSubcategory(categoryId);
-            List<ProductListingDTO> sortedDtoProducts = products
+    public List<ProductListingDTO> getSortedProductsByCategoryAndSubCat(Long categoryId, String sort) {
+        if (categoryId != null && categoryId > 0 && sort != null) {
+            List<Product> products;
+            if (sort.equals("price-desc")) {
+                products = productRepository.findProductsByCategoryAndSubcategorySortedOnBasePriceDESC(categoryId);
+            } else {
+                products = productRepository.findProductsByCategoryAndSubcategorySortedOnBasePriceASC(categoryId);
+            }
+
+            List<ProductListingDTO> dtoProducts = products
                     .stream()
-                    .sorted((o1, o2) -> (int) (o1.getBase_price() - o2.getBase_price()))
                     .map(this::toProductDTO)
                     .collect(Collectors.toList());
-            return sortedDtoProducts;
+            return dtoProducts;
 
         }
         throw new IllegalArgumentException("categoryId is incorrect");
