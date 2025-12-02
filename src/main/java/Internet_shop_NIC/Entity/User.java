@@ -20,10 +20,20 @@ public class User {
     @Column
     private String password;
     @Column
+    private String role;
+    @Column
     private LocalDateTime createdAt;
 
 
     public User() {
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Long getId() {
