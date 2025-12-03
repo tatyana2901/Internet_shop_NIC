@@ -4,7 +4,7 @@ package Internet_shop_NIC.DTO;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-public class UserDTO {
+public class UserRegistrationDTO {
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов длиной")
     private String first_name;
