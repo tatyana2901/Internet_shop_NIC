@@ -1,14 +1,20 @@
 package Internet_shop_NIC.Security;
 
+import Internet_shop_NIC.Service.UsDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 @Component
@@ -16,12 +22,12 @@ public class JWTFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String HEADER_NAME = "Authorization";
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UsDetailsService usDetailsService;
 
     @Autowired
-    public JWTFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JWTFilter(JwtService jwtService, UsDetailsService usDetailsService) {
         this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
+        this.usDetailsService = usDetailsService;
     }
 
     @Override
@@ -29,47 +35,35 @@ public class JWTFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-
         String authHeader = request.getHeader(HEADER_NAME);
 
-        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
-            String jwt = authHeader.substring(BEARER_PREFIX.length());
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String jwt = authHeader.substring(BEARER_PREFIX.length());
+        String username = jwtService.extractUserName(jwt);
 
-            if (jwt.isEmpty()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                        "Invalid JWT Token in Bearer Header");
-            } else {
-                try {
+        if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = usDetailsService.loadUserByUsername(username);
 
+            // Если токен валиден, то аутентифицируем пользователя
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
 
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
-                    //ПОМЕНЯТЬ""" https://habr.com/ru/articles/784508/
-              //      https://javarush.com/quests/lectures/ru.javarush.java.spring.lecture.level11.lecture03
-                    //https://javarush.com/quests/lectures/ru.javarush.java.spring.lecture.level11.lecture04
+                //    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                //    https://habr.com/ru/companies/spring_aio/articles/909448/
-                  //  https://github.com/NeilAlishev/SpringCourse/blob/master/JWTApp/src/main/java/ru/alishev/springcourse/FirstSecurityApp/security/JWTUtil.java
-
-
-                    String username = jwtUtil.validateTokenAndRetrieveClaim(jwt);
-                    UserDetails userDetails = personDetailsService.loadUserByUsername(username);
-
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails,
-                                    userDetails.getPassword(),
-                                    userDetails.getAuthorities());
-
-                    if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
-                } catch (JWTVerificationException exc) {
-                    httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                            "Invalid JWT Token");
-                }
+                context.setAuthentication(authToken);
+                SecurityContextHolder.setContext(context);
             }
         }
-
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        filterChain.doFilter(request, response);
 
 
     }

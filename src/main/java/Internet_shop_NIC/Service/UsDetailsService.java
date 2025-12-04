@@ -2,21 +2,23 @@ package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.Entity.User;
 import Internet_shop_NIC.Repository.UserRepository;
-import Internet_shop_NIC.Security.UserDetailsService;
+
+import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class UserSecurityService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class UsDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
     @Autowired
-    public UserSecurityService(UserRepository userRepository) {
+    public UsDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -27,6 +29,6 @@ public class UserSecurityService implements org.springframework.security.core.us
         if (!user.isPresent())
             throw new UsernameNotFoundException("User not found");
 
-        return new UserDetailsService(user.get());
+        return new UsDetails(user.get());
     }
 }

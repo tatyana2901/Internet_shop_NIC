@@ -15,6 +15,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 //ЗДЕСЬ МЫ НЕСКОЛЬКО РАЗ ИЗВЛЕКАЕМ ДАННЫЕ ИЗ ТОКЕНА _СНАЧАЛОА ЧТОБЫ ПОЛУЧИТЬ А ПОТОМ ЧТОБЫ ПРОВЕРИТЬ -МОЖНО ИЗБЕЖАТЬ ДВОЙНОГО ИЗВЛЕЧЕНИЯ?
 @Service
 public class JwtService {
@@ -52,7 +53,7 @@ public class JwtService {
 
 
     // Проверка токена
-    public Claims extractClaims(String token) {
+    private Claims extractClaims(String token) {
 
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey()).build()
@@ -65,9 +66,9 @@ public class JwtService {
     }
 
 
-    public boolean validateToken(String token, String username) {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String tokenUsername = extractUserName(token);
-        return (username.equals(tokenUsername) && !isTokenExpired(token));
+        return (userDetails.getUsername().equals(tokenUsername) && !isTokenExpired(token));
     }
 
 
