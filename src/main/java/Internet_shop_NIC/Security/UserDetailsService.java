@@ -2,15 +2,16 @@ package Internet_shop_NIC.Security;
 
 import Internet_shop_NIC.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserSecurity implements UserDetails {
+public class UserDetailsService implements UserDetails {
     private final User user;
 
-    public UserSecurity(User user) {
+    public UserDetailsService(User user) {
         this.user = user;
     }
 
@@ -20,7 +21,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getFirst_name();
+        return user.getEmail();
     }
 
     @Override
