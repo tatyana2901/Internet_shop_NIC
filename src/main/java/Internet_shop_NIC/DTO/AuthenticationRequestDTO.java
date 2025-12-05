@@ -2,7 +2,7 @@ package Internet_shop_NIC.DTO;
 
 import javax.validation.constraints.NotEmpty;
 
-public class UserAuthenticationDTO {
+public class AuthenticationRequestDTO {
 
     @NotEmpty(message = "Введите email!")
     private String email;
