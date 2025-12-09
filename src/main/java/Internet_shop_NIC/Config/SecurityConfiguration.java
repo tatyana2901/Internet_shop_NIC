@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity // если будешь использовать @PreAuthorize и т.п.
+
 public class SecurityConfiguration {
 
     private final JWTFilter jwtFilter;
@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/auth/login","/auth/registration").permitAll()
                 .antMatchers("/products/**", "/categories/**").permitAll()
                 .antMatchers("/api/cart/**", "/api/orders/**", "/api/profile/**").authenticated()
                 .anyRequest().authenticated()

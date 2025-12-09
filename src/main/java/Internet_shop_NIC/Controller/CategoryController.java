@@ -19,19 +19,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
- //   private UserRepository r;
+
     private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService/*, UserRepository r*/) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-       // this.r = r;
     }
 
 
     @GetMapping()
     public List<CategoryDTO> getRootCategories() {
-       // System.out.println(r.findAll());
         return categoryService.getRootCategories();
     }
 
