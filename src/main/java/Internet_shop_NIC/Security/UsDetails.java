@@ -1,6 +1,6 @@
 package Internet_shop_NIC.Security;
 
-import Internet_shop_NIC.Entity.User;
+import Internet_shop_NIC.Entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,29 +9,29 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class UsDetails implements UserDetails {
-    private final User user;
+    private final Users users;
 
-    public UsDetails(User user) {
-        this.user = user;
+    public UsDetails(Users users) {
+        this.users = users;
     }
 
-    public User getUser() {
-        return this.user;
+    public Users getUser() {
+        return this.users;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
+        return Collections.singletonList(new SimpleGrantedAuthority(users.getRole()));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return users.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return users.getEmail();
     }
 
     @Override

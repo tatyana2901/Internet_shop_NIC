@@ -1,6 +1,6 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.Entity.User;
+import Internet_shop_NIC.Entity.Users;
 import Internet_shop_NIC.Repository.UserRepository;
 
 import Internet_shop_NIC.Security.UsDetails;
@@ -24,7 +24,8 @@ public class UsDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<Users> user = userRepository.findByEmail(email);
+
 
         if (!user.isPresent())
             throw new UsernameNotFoundException("User not found");

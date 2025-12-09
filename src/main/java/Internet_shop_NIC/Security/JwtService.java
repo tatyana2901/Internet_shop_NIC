@@ -1,6 +1,6 @@
 package Internet_shop_NIC.Security;
 
-import Internet_shop_NIC.Entity.User;
+import Internet_shop_NIC.Entity.Users;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -25,12 +25,12 @@ public class JwtService {
 
     public String createToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof User) {
-            User customUserDetails = (User) userDetails;
-            claims.put("id", customUserDetails.getId());
-            claims.put("last_name", customUserDetails.getLast_name());
-            claims.put("first_name", customUserDetails.getFirst_name());
-            claims.put("role", customUserDetails.getRole());
+        if (userDetails instanceof Users) {
+            Users customUsersDetails = (Users) userDetails;
+            claims.put("id", customUsersDetails.getId());
+            claims.put("last_name", customUsersDetails.getLast_name());
+            claims.put("first_name", customUsersDetails.getFirst_name());
+            claims.put("role", customUsersDetails.getRole());
         }
         return generateToken(claims, userDetails);
     }

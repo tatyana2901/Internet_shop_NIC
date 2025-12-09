@@ -34,7 +34,7 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/register", "/auth/login").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/products/**", "/categories/**").permitAll()
                 .antMatchers("/api/cart/**", "/api/orders/**", "/api/profile/**").authenticated()
                 .anyRequest().authenticated()

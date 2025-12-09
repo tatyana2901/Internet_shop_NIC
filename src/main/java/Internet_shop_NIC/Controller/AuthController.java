@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+/*ПОПРАВИТЬ*@RequestMapping("/auth")*/
+
 public class AuthController {
 
     private final AuthService authService;
@@ -25,12 +26,9 @@ public class AuthController {
     @PostMapping("/login")
     public JWTResponseDTO performLogin(@RequestBody AuthenticationRequestDTO authRequestDTO) {
 
-
-        JWTResponseDTO jwtResponseDTO = authService.signIn(authRequestDTO);
-
-        return jwtResponseDTO;
-
-
+        JWTResponseDTO v = authService.signIn(authRequestDTO);
+        System.out.println(v);
+        return v;
     }
 
 }

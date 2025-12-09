@@ -5,8 +5,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "users")
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -25,7 +25,7 @@ public class User {
     private LocalDateTime createdAt;
 
 
-    public User() {
+    public Users() {
     }
 
     public String getRole() {
