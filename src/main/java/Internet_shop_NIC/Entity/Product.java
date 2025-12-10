@@ -21,7 +21,7 @@ public class Product {
     @Column
     private double base_price;
     @Column
-    private int discount_percent;
+    private Integer discount_percent;
     @Column
     private int stock_quantity;
     @Column
@@ -74,11 +74,11 @@ public class Product {
         this.base_price = base_price;
     }
 
-    public int getDiscount_percent() {
+    public Integer getDiscount_percent() {
         return discount_percent;
     }
 
-    public void setDiscount_percent(int discount_percent) {
+    public void setDiscount_percent(Integer discount_percent) {
         this.discount_percent = discount_percent;
     }
 

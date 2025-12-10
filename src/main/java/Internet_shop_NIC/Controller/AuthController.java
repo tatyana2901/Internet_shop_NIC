@@ -25,10 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public JWTResponseDTO performLogin(@RequestBody AuthenticationRequestDTO authRequestDTO) {
-
-        JWTResponseDTO v = authService.signIn(authRequestDTO);
-        System.out.println(v);
-        return v;
+        return authService.signIn(authRequestDTO);
     }
 
 }
