@@ -1,9 +1,8 @@
-package Internet_shop_NIC.Service;
+package Internet_shop_NIC.Security;
 
 import Internet_shop_NIC.Entity.Users;
 import Internet_shop_NIC.Repository.UserRepository;
 
-import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

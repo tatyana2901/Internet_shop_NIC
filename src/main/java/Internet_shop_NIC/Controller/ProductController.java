@@ -7,6 +7,8 @@ import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import Internet_shop_NIC.Service.ProductService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,10 +35,13 @@ public class ProductController {
 
     //в листинге
     @GetMapping("/categories/{categoryId}/products")
+    @SecurityRequirement(name = "BearerAuth") //Swagger
     public List<ProductListingDTO> getAllProductsByCategory(@PathVariable("categoryId") Long categoryId,
                                                             @RequestParam(defaultValue = "price-asc") String sort,
-                                                            @AuthenticationPrincipal UserDetails userDetails) {
-        return productService.getSortedProductsByCategoryAndSubCat(categoryId, sort, userDetails);
+                                                            @Parameter(hidden = true) //Swagger
+                                                            @AuthenticationPrincipal UsDetails usDetails) {
+
+        return productService.getSortedProductsByCategoryAndSubCat(categoryId, sort, usDetails);
     }
     //товар по категории
 

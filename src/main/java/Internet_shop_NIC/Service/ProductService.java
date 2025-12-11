@@ -4,6 +4,7 @@ import Internet_shop_NIC.DTO.ProductCatalogDTO;
 import Internet_shop_NIC.DTO.ProductListingDTO;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Repository.ProductRepository;
+import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,7 +27,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductListingDTO> getSortedProductsByCategoryAndSubCat(Long categoryId, String sort, UserDetails userDetails) {
+    public List<ProductListingDTO> getSortedProductsByCategoryAndSubCat(Long categoryId, String sort, UsDetails usDetails) {
         if (categoryId != null && categoryId > 0 && sort != null) {
             List<Product> products;
             if (sort.equals("price-desc")) {
@@ -37,7 +38,7 @@ public class ProductService {
 
             List<ProductListingDTO> dtoProducts = products
                     .stream()
-                    .map(p -> toProductDTO(p, userDetails))
+                    .map(p -> toProductDTO(p, usDetails))
                     .collect(Collectors.toList());
             return dtoProducts;
 
@@ -57,7 +58,7 @@ public class ProductService {
     }
 
 
-    private ProductListingDTO toProductDTO(Product product, UserDetails userDetails) {
+    private ProductListingDTO toProductDTO(Product product, UsDetails usDetails) {
         if (product != null) {
             ProductListingDTO productListingDTO = new ProductListingDTO(product.getName(),
                     product.getDescription(),
@@ -71,7 +72,7 @@ public class ProductService {
                 productListingDTO.setAvailability("Мало");
             } else productListingDTO.setAvailability("Нет в наличии");
 
-            if (userDetails != null && product.getDiscount_percent() != null) {
+            if (usDetails != null && product.getDiscount_percent() != null) {
                 Double discountedPrice = product.getBase_price() * (1 - product.getDiscount_percent() / 100.00);
                 productListingDTO.setDiscountedPrice(discountedPrice);
             }

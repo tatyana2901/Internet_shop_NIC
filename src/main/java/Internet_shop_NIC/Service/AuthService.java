@@ -2,10 +2,11 @@ package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.AuthenticationRequestDTO;
 import Internet_shop_NIC.DTO.JWTResponseDTO;
+import Internet_shop_NIC.DTO.RegistrationRequestDTO;
 import Internet_shop_NIC.Security.JwtService;
+import Internet_shop_NIC.Security.UsDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +33,7 @@ public class AuthService {
     }
 
 
-    public JWTResponseDTO signIn(AuthenticationRequestDTO authRequest) {
+    public JWTResponseDTO logIn(AuthenticationRequestDTO authRequest) {
 
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
@@ -51,28 +52,7 @@ public class AuthService {
     }
 
 
- /* public Person convertToPerson(PersonDTO personDTO) {
-        return this.modelMapper.map(personDTO, Person.class);
-    }*/
-
-
-
-
-
-
-
-
-
-
-/*
-
-*
-     * Регистрация пользователя
-     *
-     * @param request данные пользователя
-     * @return токен
-
-    public JwtAuthenticationResponse signUp(SignUpRequest request) {
+    public JWTResponseDTO registrate(RegistrationRequestDTO regRequest) {
 
         var user = User.builder()
                 .username(request.getUsername())
@@ -87,8 +67,11 @@ public class AuthService {
         return new JwtAuthenticationResponse(jwt);
     }
 
-*/
 
+
+ /* public Person convertToPerson(PersonDTO personDTO) {
+        return this.modelMapper.map(personDTO, Person.class);
+    }*/
 
 
 }

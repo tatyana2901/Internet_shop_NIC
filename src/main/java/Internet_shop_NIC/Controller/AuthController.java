@@ -2,10 +2,9 @@ package Internet_shop_NIC.Controller;
 
 import Internet_shop_NIC.DTO.AuthenticationRequestDTO;
 import Internet_shop_NIC.DTO.JWTResponseDTO;
+import Internet_shop_NIC.DTO.RegistrationRequestDTO;
 import Internet_shop_NIC.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public JWTResponseDTO performLogin(@RequestBody AuthenticationRequestDTO authRequestDTO) {
-        return authService.signIn(authRequestDTO);
+        return authService.logIn(authRequestDTO);
+    }
+
+
+    @PostMapping("/registration")
+    public JWTResponseDTO performRegistration(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
+        return authService.registrate(registrationRequestDTO);
     }
 
 }

@@ -10,22 +10,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProfileService {
 
-    @Autowired
+
     public ProfileService() {
     }
 
-    public CurrentUserDTO toCurrentUserDTO(UserDetails userDetails) {
-
-        if (userDetails != null) {
-            UsDetails ud = (UsDetails) userDetails;
-            Users user = ud.getUser();
+    public CurrentUserDTO toCurrentUserDTO(UsDetails usDetails) {
+        if (usDetails != null) {
+            Users user = usDetails.getUser();
             String lastname = user.getLast_name();
             String firstNameLetter = user.getFirst_name().substring(0, 1);
             return new CurrentUserDTO(lastname + " " + firstNameLetter + ".");
         }
-
         return null;
-
     }
 
 }

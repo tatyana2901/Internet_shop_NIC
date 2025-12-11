@@ -29,15 +29,15 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println(" filterChain ЗАПУСТИЛСЯ !!!");
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/login","/auth/registration").permitAll()
-                .antMatchers("/products/**", "/categories/**").permitAll()
-                .antMatchers("/api/cart/**", "/api/orders/**", "/api/profile/**").authenticated()
+                .antMatchers("/categories/**").permitAll()
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/webjars/**").permitAll()
+                .antMatchers("/profile/user").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
