@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,11 @@ public class AuthService {
     //   private final PersonValidator personValidator;
     //  private final ModelMapper modelMapper;
 
-    private final UsDetailsService usDetailsService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthService(UsDetailsService usDetailsService, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.usDetailsService = usDetailsService;
+    public AuthService(JwtService jwtService, AuthenticationManager authenticationManager) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
@@ -52,20 +51,7 @@ public class AuthService {
     }
 
 
-    public JWTResponseDTO registrate(RegistrationRequestDTO regRequest) {
 
-        var user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
-                .build();
-
-        userService.create(user);
-
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
-    }
 
 
 
