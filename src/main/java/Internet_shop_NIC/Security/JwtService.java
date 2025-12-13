@@ -24,27 +24,14 @@ public class JwtService {
     private String jwtSigningKey;
 
     public String createToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof Users) {
-            Users customUsersDetails = (Users) userDetails;
-            claims.put("id", customUsersDetails.getId());
-            claims.put("last_name", customUsersDetails.getLast_name());
-            claims.put("first_name", customUsersDetails.getFirst_name());
-            claims.put("role", customUsersDetails.getRole());
-        }
-        return generateToken(claims, userDetails);
-    }
-
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-
         return Jwts.builder()
-                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
