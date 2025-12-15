@@ -1,12 +1,12 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.RegistrationRequestDTO;
+import Internet_shop_NIC.DTO.RegistrationRequest;
 import Internet_shop_NIC.Entity.Users;
 import Internet_shop_NIC.Exception.NewUserDataRegistrationNotProvided;
 import Internet_shop_NIC.Exception.UserAlreadyExistException;
+import Internet_shop_NIC.Mapper.RegistrationRequestMapper;
 import Internet_shop_NIC.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,14 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RegistrationRequestMapper registrationRequestMapper;
     private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RegistrationRequestMapper registrationRequestMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.registrationRequestMapper = registrationRequestMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -36,24 +38,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void register(RegistrationRequestDTO regRequest) {
-        Users user = toUser(regRequest);
+    public void register(RegistrationRequest regRequest) {
+        Users user = registrationRequestMapper.toUser(regRequest);
         create(user);
     }
 
-    private Users toUser(RegistrationRequestDTO regRequest) {
-        if (regRequest != null) {
-            Users user = new Users();
-            user.setFirst_name(regRequest.getFirst_name());
-            user.setLast_name(regRequest.getLast_name());
-            user.setEmail(regRequest.getEmail());
-            user.setPassword(passwordEncoder.encode(regRequest.getPassword()));
-            user.setRole("ROLE_USER");
-            user.setCreatedAt(LocalDateTime.now());
-            return user;
-        }
-        throw new NewUserDataRegistrationNotProvided("Отсутствуют данные для регистрации нового пользователя.");
-    }
 
 
 }

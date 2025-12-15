@@ -1,10 +1,10 @@
 package Internet_shop_NIC.DTO;
 
-public class ProductCatalogDTO {
+public class ProductCatalog {
 
     private String name;
 
-    public ProductCatalogDTO(String name) {
+    public ProductCatalog(String name) {
         this.name = name;
     }
 

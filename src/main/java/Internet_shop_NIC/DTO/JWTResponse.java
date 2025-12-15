@@ -1,13 +1,13 @@
 package Internet_shop_NIC.DTO;
 
-public class JWTResponseDTO {
+public class JWTResponse {
 
     private String token;
 
-    public JWTResponseDTO() {
+    public JWTResponse() {
     }
 
-    public JWTResponseDTO(String token) {
+    public JWTResponse(String token) {
         this.token = token;
     }
 

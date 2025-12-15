@@ -1,7 +1,7 @@
 package Internet_shop_NIC.DTO;
 
 
-public class ProductListingDTO {
+public class ProductListing {
 
     private String name;
     private String description;
@@ -10,7 +10,7 @@ public class ProductListingDTO {
     private double base_price;
     private Double discountedPrice;
 
-    public ProductListingDTO(String name, String description, String image_url, double base_price) {
+    public ProductListing(String name, String description, String image_url, double base_price) {
         this.name = name;
         this.description = description;
         this.image_url = image_url;

@@ -1,8 +1,8 @@
 package Internet_shop_NIC.Controller;
 
-import Internet_shop_NIC.DTO.AuthenticationRequestDTO;
-import Internet_shop_NIC.DTO.JWTResponseDTO;
-import Internet_shop_NIC.DTO.RegistrationRequestDTO;
+import Internet_shop_NIC.DTO.AuthenticationRequest;
+import Internet_shop_NIC.DTO.JWTResponse;
+import Internet_shop_NIC.DTO.RegistrationRequest;
 import Internet_shop_NIC.Service.AuthService;
 import Internet_shop_NIC.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public JWTResponseDTO performLogin(@RequestBody AuthenticationRequestDTO authRequestDTO) {
+    public JWTResponse performLogin(@RequestBody AuthenticationRequest authRequestDTO) {
         return authService.logIn(authRequestDTO);
     }
 
 
     @PostMapping("/registration")
-    public ResponseEntity<Void> performRegistration(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
-        userService.register(registrationRequestDTO);
+    public ResponseEntity<Void> performRegistration(@RequestBody RegistrationRequest registrationRequest) {
+        userService.register(registrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

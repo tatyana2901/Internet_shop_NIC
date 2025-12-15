@@ -3,6 +3,7 @@ package Internet_shop_NIC.Service;
 import Internet_shop_NIC.DTO.CategoryDTO;
 import Internet_shop_NIC.Entity.Category;
 import Internet_shop_NIC.Entity.Product;
+import Internet_shop_NIC.Mapper.CategoryMapper;
 import Internet_shop_NIC.Repository.CategoryRepository;
 import Internet_shop_NIC.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +16,19 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
 
     public List<CategoryDTO> getRootCategories() {
         List<Category> categories = categoryRepository.findByParentsIsEmpty();
         return categories.stream()
-                .map(this::toCategoryDTO)
+                .map(categoryMapper::toCategoryDTO)
                 .collect(Collectors.toList());
 
 
@@ -36,17 +39,12 @@ public class CategoryService {
         if (parentId > 0) {
             Optional<Category> categoryOptional = categoryRepository.findById(parentId);
             return categoryOptional.map(category -> category.getChildren().stream()
-                    .map(this::toCategoryDTO).
+                    .map(categoryMapper::toCategoryDTO).
                     collect(Collectors.toList())).orElseGet(ArrayList::new);
         }
         throw new IllegalArgumentException("parentId is incorrect");
     }
 
-    private CategoryDTO toCategoryDTO(Category category) {
-        if (category != null) {
-            return new CategoryDTO(category.getId(), category.getName());
-        } else throw new IllegalArgumentException("category is null");
-    }
 
 
 }

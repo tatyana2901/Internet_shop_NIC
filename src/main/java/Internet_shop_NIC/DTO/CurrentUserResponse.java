@@ -1,15 +1,15 @@
 package Internet_shop_NIC.DTO;
 
-public class CurrentUserDTO {
+public class CurrentUserResponse {
 
     private String currentUser;
 
 
-    public CurrentUserDTO(String currentUser) {
+    public CurrentUserResponse(String currentUser) {
         this.currentUser = currentUser;
     }
 
-    public CurrentUserDTO() {
+    public CurrentUserResponse() {
     }
 
     public String getCurrentUser() {

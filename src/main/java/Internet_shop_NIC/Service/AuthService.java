@@ -1,15 +1,12 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.AuthenticationRequestDTO;
-import Internet_shop_NIC.DTO.JWTResponseDTO;
-import Internet_shop_NIC.DTO.RegistrationRequestDTO;
+import Internet_shop_NIC.DTO.AuthenticationRequest;
+import Internet_shop_NIC.DTO.JWTResponse;
 import Internet_shop_NIC.Security.JwtService;
-import Internet_shop_NIC.Security.UsDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,7 @@ public class AuthService {
     }
 
 
-    public JWTResponseDTO logIn(AuthenticationRequestDTO authRequest) {
+    public JWTResponse logIn(AuthenticationRequest authRequest) {
 
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(),
@@ -42,7 +39,7 @@ public class AuthService {
 
         if (authentication.isAuthenticated()) {
             String jwt = jwtService.createToken((UserDetails) authentication.getPrincipal());
-            return new JWTResponseDTO(jwt);
+            return new JWTResponse(jwt);
         } else {
             throw new UsernameNotFoundException("Invalid user request!");
         }
