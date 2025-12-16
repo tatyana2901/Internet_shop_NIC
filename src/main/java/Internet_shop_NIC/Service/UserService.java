@@ -17,32 +17,29 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RegistrationRequestMapper registrationRequestMapper;
-    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
     public UserService(UserRepository userRepository, RegistrationRequestMapper registrationRequestMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.registrationRequestMapper = registrationRequestMapper;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public Users create(Users user) {
+    public void create(Users user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistException("Пользователь с таким email уже существует");
         }
-        return save(user);
+        save(user);
     }
 
-    public Users save(Users user) {
-        return userRepository.save(user);
+    private void save(Users user) {
+        userRepository.save(user);
     }
 
     public void register(RegistrationRequest regRequest) {
         Users user = registrationRequestMapper.toUser(regRequest);
         create(user);
     }
-
 
 
 }

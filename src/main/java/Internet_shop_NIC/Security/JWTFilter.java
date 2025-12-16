@@ -41,6 +41,7 @@ public class JWTFilter extends OncePerRequestFilter {
         String username = jwtService.extractUserName(jwt);
 
         if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
+            System.out.println("УСЛОВИЕ ВЫПОЛНИЛОСЬ!!!! !username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null");
             UserDetails userDetails = usDetailsService.loadUserByUsername(username);
 
             // Если токен валиден, то аутентифицируем пользователя

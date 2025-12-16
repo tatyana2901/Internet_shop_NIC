@@ -1,12 +1,12 @@
 package Internet_shop_NIC.DTO;
 
 
-public class CategoryDTO {
+public class CategoryResponse {
     private long id;
     private String name;
 
 
-    public CategoryDTO() {
+    public CategoryResponse() {
     }
 
     public void setId(long id) {

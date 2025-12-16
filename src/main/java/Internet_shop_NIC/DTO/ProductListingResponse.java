@@ -1,7 +1,7 @@
 package Internet_shop_NIC.DTO;
 
 
-public class ProductListing {
+public class ProductListingResponse {
 
     private String name;
     private String description;
@@ -10,7 +10,7 @@ public class ProductListing {
     private double base_price;
     private Double discountedPrice;
 
-    public ProductListing(String name, String description, String image_url, double base_price) {
+    public ProductListingResponse(String name, String description, String image_url, double base_price) {
         this.name = name;
         this.description = description;
         this.image_url = image_url;
@@ -38,38 +38,6 @@ public class ProductListing {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
-
-    public String getAvailability() {
-        return availability;
-    }
-
-    public double getBase_price() {
-        return base_price;
-    }
-
-    public void setBase_price(double base_price) {
-        this.base_price = base_price;
-    }
-
-    public Double getDiscountedPrice() {
-        return discountedPrice;
     }
 
     public void setDiscountedPrice(Double discountedPrice) {

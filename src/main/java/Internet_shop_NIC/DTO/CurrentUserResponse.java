@@ -5,10 +5,6 @@ public class CurrentUserResponse {
     private String currentUser;
 
 
-    public CurrentUserResponse(String currentUser) {
-        this.currentUser = currentUser;
-    }
-
     public CurrentUserResponse() {
     }
 

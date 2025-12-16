@@ -14,11 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-
-    //  private final RegistrationService registrationService;
-    //   private final PersonValidator personValidator;
-    //  private final ModelMapper modelMapper;
-
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
@@ -46,15 +41,6 @@ public class AuthService {
 
 
     }
-
-
-
-
-
-
- /* public Person convertToPerson(PersonDTO personDTO) {
-        return this.modelMapper.map(personDTO, Person.class);
-    }*/
 
 
 }

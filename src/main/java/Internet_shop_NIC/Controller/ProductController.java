@@ -1,7 +1,7 @@
 package Internet_shop_NIC.Controller;
 
-import Internet_shop_NIC.DTO.ProductCatalog;
-import Internet_shop_NIC.DTO.ProductListing;
+import Internet_shop_NIC.DTO.ProductCatalogResponse;
+import Internet_shop_NIC.DTO.ProductListingResponse;
 import Internet_shop_NIC.Security.UsDetails;
 import Internet_shop_NIC.Service.ProductService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,16 +25,16 @@ public class ProductController {
 
     //в каталоге
     @GetMapping("/categories/{categoryId}/direct_products")
-    public List<ProductCatalog> getProductsByCategory(@PathVariable("categoryId") Long categoryId) {
+    public List<ProductCatalogResponse> getProductsByCategory(@PathVariable("categoryId") Long categoryId) {
         return productService.getDirectProductsByCategory(categoryId);
     }
 
     //в листинге
     @GetMapping("/categories/{categoryId}/products")
     @SecurityRequirement(name = "BearerAuth") //Swagger
-    public List<ProductListing> getAllProductsByCategory(@PathVariable("categoryId") Long categoryId,
-                                                         @RequestParam(defaultValue = "price-asc") String sort,
-                                                         @Parameter(hidden = true) //Swagger
+    public List<ProductListingResponse> getAllProductsByCategory(@PathVariable("categoryId") Long categoryId,
+                                                                 @RequestParam(defaultValue = "price-asc") String sort,
+                                                                 @Parameter(hidden = true) //Swagger
                                                             @AuthenticationPrincipal UsDetails usDetails) {
 
         return productService.getSortedProductsByCategoryAndSubCat(categoryId, sort, usDetails);
