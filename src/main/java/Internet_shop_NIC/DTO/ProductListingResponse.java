@@ -17,6 +17,26 @@ public class ProductListingResponse {
         this.base_price = base_price;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public double getBase_price() {
+        return base_price;
+    }
+
+    public Double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
     public void setAvailability(String availability) {
         this.availability = availability;
     }

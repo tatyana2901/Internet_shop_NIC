@@ -1,8 +1,11 @@
 package Internet_shop_NIC.DTO;
 
-public class AddToCartRequest {
+import javax.validation.constraints.NotNull;
 
+public class AddToCartRequest {
+    @NotNull
     private Long productId;
+    @NotNull
     private int quantity;
 
     public Long getProductId() {

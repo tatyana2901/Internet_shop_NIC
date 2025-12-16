@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-12-16T12:34:58+0300",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_462 (Amazon.com Inc.)"
+    date = "2025-12-16T18:50:37+0300",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_452 (Amazon.com Inc.)"
 )
 @Component
 public class CurrentUserResponseMapperImpl extends CurrentUserResponseMapper {

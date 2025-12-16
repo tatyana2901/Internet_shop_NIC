@@ -1,10 +1,10 @@
 package Internet_shop_NIC.Security;
 
+import Internet_shop_NIC.Entity.Users;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,12 +19,10 @@ public class JWTFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String HEADER_NAME = "Authorization";
     private final JwtService jwtService;
-    private final UsDetailsService usDetailsService;
 
     @Autowired
-    public JWTFilter(JwtService jwtService, UsDetailsService usDetailsService) {
+    public JWTFilter(JwtService jwtService) {
         this.jwtService = jwtService;
-        this.usDetailsService = usDetailsService;
     }
 
     @Override
@@ -38,31 +36,31 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
         String jwt = authHeader.substring(BEARER_PREFIX.length());
-        String username = jwtService.extractUserName(jwt);
 
-        if (!username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
-            System.out.println("УСЛОВИЕ ВЫПОЛНИЛОСЬ!!!! !username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null");
-            UserDetails userDetails = usDetailsService.loadUserByUsername(username);
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            // Если токен валиден, то аутентифицируем пользователя
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            Claims claims = jwtService.extractClaims(jwt);
+            String email = claims.getSubject();
 
-                SecurityContext context = SecurityContextHolder.createEmptyContext();
+            Users user = new Users();
+            user.setId(claims.get("id", Long.class));
+            user.setEmail(email);
+            user.setFirst_name(claims.get("firstName", String.class));
+            user.setLast_name(claims.get("lastName", String.class));
+            user.setRole(claims.get("role", String.class));
 
+            UsDetails userDetails = new UsDetails(user);
+            if (jwtService.isTokenValid(jwt)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities()
                 );
 
-                //    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                context.setAuthentication(authToken);
-                SecurityContextHolder.setContext(context);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         filterChain.doFilter(request, response);
-
 
     }
 }

@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-//ALTER TABLE cart ADD UNIQUE (user_id, product_id);
 @Entity
 @Table(name = "cart_item")
 public class CartItem {

@@ -3,6 +3,7 @@ package Internet_shop_NIC.Service;
 import Internet_shop_NIC.DTO.AuthenticationRequest;
 import Internet_shop_NIC.DTO.JWTResponse;
 import Internet_shop_NIC.Security.JwtService;
+import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,7 +34,7 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(authInputToken);
 
         if (authentication.isAuthenticated()) {
-            String jwt = jwtService.createToken((UserDetails) authentication.getPrincipal());
+            String jwt = jwtService.createToken((UsDetails) authentication.getPrincipal());
             return new JWTResponse(jwt);
         } else {
             throw new UsernameNotFoundException("Invalid user request!");

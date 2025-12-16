@@ -23,14 +23,34 @@ public class JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
 
-    public String createToken(UserDetails userDetails) {
+   /* public String createToken(UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }*/
+
+    public String createToken(UsDetails usDetails) {
+
+        Users user = usDetails.getUser();
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("firstName", user.getFirst_name());
+        claims.put("lastName", user.getLast_name());
+        claims.put("role", user.getRole());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+
     }
+
 
 
     private Key getSigningKey() {
@@ -40,10 +60,11 @@ public class JwtService {
 
 
     // Проверка токена
-    private Claims extractClaims(String token) {
+    public Claims extractClaims(String token) {
 
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey()).build()
+                .setSigningKey(getSigningKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -53,9 +74,8 @@ public class JwtService {
     }
 
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String tokenUsername = extractUserName(token);
-        return (userDetails.getUsername().equals(tokenUsername) && !isTokenExpired(token));
+    public boolean isTokenValid(String token) {
+        return  !isTokenExpired(token);
     }
 
 
