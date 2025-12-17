@@ -2,11 +2,11 @@ package Internet_shop_NIC.DTO;
 
 import javax.validation.constraints.NotNull;
 
-public class AddToCartRequest {
+public class CartItemRequest {
     @NotNull
     private Long productId;
     @NotNull
-    private int quantity;
+    private int quantity; //Обновленное количество товара в корзине
 
     public Long getProductId() {
         return productId;

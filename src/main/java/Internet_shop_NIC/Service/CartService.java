@@ -1,6 +1,6 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.AddToCartRequest;
+import Internet_shop_NIC.DTO.CartItemRequest;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.ProductNotFoundException;
@@ -9,6 +9,7 @@ import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -24,15 +25,20 @@ public class CartService {
         this.productRepository = productRepository;
     }
 
-    public void addProductToCart(AddToCartRequest addToCartRequest,
-                                 UsDetails usDetails) {
+    @Transactional
+    public void updateCartItemQuantity(CartItemRequest cartItemRequest,
+                                       UsDetails usDetails) {
 
-        int quantity = addToCartRequest.getQuantity();
-        Long productId = addToCartRequest.getProductId();
+        int quantity = cartItemRequest.getQuantity();
+        Long productId = cartItemRequest.getProductId();
         Long userId = usDetails.getUser().getId();
+        if (quantity == 0) {
+            cartRepository.deleteByUserIdAndProductId(userId, productId);
+            return;
+        }
         int stockQuantity = getProductQuantityAvailable(productId);
         if (stockQuantity < quantity) {
-            throw new OutOfStockProductException("Недостаточно товара на складе. На складе товара: " + stockQuantity + ", вы заказываете товара: " + quantity);
+            throw new OutOfStockProductException("Недостаточно товара на складе. На складе товара: " + stockQuantity + ", вы кладете в корзину: " + quantity);
         }
         CartItem cartItem = cartRepository.findByUserIdAndProductId(userId, productId)
                 .orElseGet(() -> {
@@ -44,8 +50,9 @@ public class CartService {
                     return newItem;
                 });
 
-        cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        cartItem.setQuantity(quantity);
         cartRepository.save(cartItem);
+
     }
 
     private int getProductQuantityAvailable(Long productId) {
@@ -55,5 +62,5 @@ public class CartService {
                 .getStock_quantity();
     }
 
-
 }
+
