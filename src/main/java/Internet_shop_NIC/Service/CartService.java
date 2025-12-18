@@ -1,6 +1,7 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.CartItemRequest;
+import Internet_shop_NIC.DTO.CartItemUpdateRequest;
+import Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.ProductNotFoundException;
@@ -26,17 +27,17 @@ public class CartService {
     }
 
     @Transactional
-    public void updateCartItemQuantity(CartItemRequest cartItemRequest,
+    public void updateCartItemQuantity(CartItemUpdateRequest cartItemUpdateRequest,
                                        UsDetails usDetails) {
 
-        int quantity = cartItemRequest.getQuantity();
-        Long productId = cartItemRequest.getProductId();
+        int quantity = cartItemUpdateRequest.getQuantity();
+        Long productId = cartItemUpdateRequest.getProductId();
         Long userId = usDetails.getUser().getId();
         if (quantity == 0) {
             cartRepository.deleteByUserIdAndProductId(userId, productId);
             return;
         }
-        int stockQuantity = getProductQuantityAvailable(productId);
+        int stockQuantity = getProductQuantityInStock(productId);
         if (stockQuantity < quantity) {
             throw new OutOfStockProductException("Недостаточно товара на складе. На складе товара: " + stockQuantity + ", вы кладете в корзину: " + quantity);
         }
@@ -55,12 +56,18 @@ public class CartService {
 
     }
 
-    private int getProductQuantityAvailable(Long productId) {
+    private int getProductQuantityInStock(Long productId) {
         return productRepository
                 .findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Не найден продукт по id " + productId))
                 .getStock_quantity();
     }
+
+    public TotalAmountOfProductsInCartResponse getTotalAmountOfProductsInCart(UsDetails usDetails) {
+        return cartRepository.totalAmountOfProductsInCart(usDetails.getUser().getId());
+    }
+
+
 
 }
 

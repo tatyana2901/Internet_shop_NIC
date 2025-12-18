@@ -2,7 +2,7 @@ package Internet_shop_NIC.DTO;
 
 import javax.validation.constraints.NotNull;
 
-public class CartItemRequest {
+public class CartItemUpdateRequest {
     @NotNull
     private Long productId;
     @NotNull

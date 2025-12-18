@@ -25,7 +25,8 @@ public class ProfileController {
     @GetMapping("/me")
     @SecurityRequirement(name = "BearerAuth") //Swagger
     public CurrentUserResponse getCurrentUser(@AuthenticationPrincipal
-                                              @Parameter(hidden = true) UsDetails usDetails) //Swagger
+                                              @Parameter(hidden = true)
+                                              UsDetails usDetails) //Swagger
     {
         return currentUserResponseMapper.toCurrentUserDTO(usDetails);
     }

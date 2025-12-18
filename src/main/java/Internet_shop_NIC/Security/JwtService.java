@@ -23,15 +23,6 @@ public class JwtService {
     @Value("${token.signing.key}")
     private String jwtSigningKey;
 
-   /* public String createToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }*/
-
     public String createToken(UsDetails usDetails) {
 
         Users user = usDetails.getUser();
