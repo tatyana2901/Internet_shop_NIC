@@ -47,14 +47,11 @@ public class ProductService {
 
     public List<ProductCatalogResponse> getDirectProductsByCategory(Long categoryId) {
         List<Product> products = productRepository.findAllByCategoriesId(categoryId);
-        System.out.println(products);
         return products
                 .stream()
-                .map(p -> new ProductCatalogResponse(p.getName()))
+                .map(p -> new ProductCatalogResponse(p.getName(), p.getId()))
                 .collect(Collectors.toList());
     }
-
-
 
 
 }

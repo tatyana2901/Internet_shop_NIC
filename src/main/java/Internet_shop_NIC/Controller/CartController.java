@@ -1,6 +1,7 @@
 package Internet_shop_NIC.Controller;
 
 import Internet_shop_NIC.DTO.CartItemUpdateRequest;
+import Internet_shop_NIC.DTO.CartPageResponse;
 import Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse;
 import Internet_shop_NIC.Security.UsDetails;
 import Internet_shop_NIC.Service.CartService;
@@ -33,7 +34,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/total")
+    @GetMapping("/count")
     @SecurityRequirement(name = "BearerAuth") //Swagger
     public TotalAmountOfProductsInCartResponse getTotalAmountProductsByUserId(@AuthenticationPrincipal
                                                                               @Parameter(hidden = true)
@@ -41,8 +42,10 @@ public class CartController {
         return cartService.getTotalAmountOfProductsInCart(usDetails);
     }
 
-    public
-    //список всех товаров в корзине посмотреть
+    /*@GetMapping("/")
+    public CartPageResponse getCartPage() {
+    }*/
+
 
 
 }

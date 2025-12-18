@@ -2,7 +2,7 @@ package Internet_shop_NIC.DTO;
 
 
 public class ProductListingResponse {
-
+    private Long id;
     private String name;
     private String description;
     private String image_url;
@@ -10,7 +10,8 @@ public class ProductListingResponse {
     private double base_price;
     private Double discountedPrice;
 
-    public ProductListingResponse(String name, String description, String image_url, double base_price) {
+    public ProductListingResponse(Long id, String name, String description, String image_url, double base_price) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.image_url = image_url;
@@ -39,6 +40,14 @@ public class ProductListingResponse {
 
     public void setAvailability(String availability) {
         this.availability = availability;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
