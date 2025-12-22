@@ -1,8 +1,11 @@
 package Internet_shop_NIC.Service;
 
+import Internet_shop_NIC.DTO.CartItemResponse;
 import Internet_shop_NIC.DTO.CartItemUpdateRequest;
+import Internet_shop_NIC.DTO.CartPageResponse;
 import Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse;
 import Internet_shop_NIC.Entity.CartItem;
+import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.ProductNotFoundException;
 import Internet_shop_NIC.Repository.CartRepository;
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -67,8 +73,32 @@ public class CartService {
         return cartRepository.totalAmountOfProductsInCart(usDetails.getUser().getId());
     }
 
+    public CartPageResponse getCartPageByUserId(Long userId) {
+
+        List<CartItem> allUserProducts = cartRepository.findAllByUserId(userId);
+
+        if (!allUserProducts.isEmpty()) {
+            List<Long> productIds = allUserProducts.stream().map(CartItem::getProductId).collect(Collectors.toList());
+            List<Product> products = productRepository.findAllById(productIds);
 
 
+            allUserProducts.stream().map(new Function<CartItem, CartItemResponse>() {
+                @Override
+                public CartItemResponse apply(CartItem cartItem) {
+                    Long productId = cartItem.getProductId();
+                    int cartQuantity = cartItem.getQuantity();
+                    int stockQuantity = getProductQuantityInStock(productId);
+                    int cartItemResponseQuantity = Math.min(cartQuantity, stockQuantity);
+
+
+                    return new CartItemResponse(productId, )
+                }
+            })
+
+        }
+
+
+    }
 
 
 }

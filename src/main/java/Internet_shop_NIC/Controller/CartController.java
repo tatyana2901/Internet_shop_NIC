@@ -43,7 +43,8 @@ public class CartController {
     }
 
     /*@GetMapping("/")
-    public CartPageResponse getCartPage() {
+    public CartPageResponse getCartPage(@AuthenticationPrincipal @Parameter(hidden = true)UsDetails usDetails)
+                                                                               {
     }*/
 
 

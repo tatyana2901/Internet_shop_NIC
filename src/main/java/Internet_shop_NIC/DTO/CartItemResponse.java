@@ -1,22 +1,19 @@
 package Internet_shop_NIC.DTO;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
-
 public class CartItemResponse {
 
-    private Long id;
+    private Long productId;
     private String image_url;
     private String name;
     private int quantity; //проверить количество товара на складе - вдруг уже раскупили
     private double price; //скидочная цена если есть
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getImage_url() {
@@ -51,8 +48,8 @@ public class CartItemResponse {
         this.price = price;
     }
 
-    public CartItemResponse(Long id, String image_url, String name, int quantity, double price) {
-        this.id = id;
+    public CartItemResponse(Long productId, String image_url, String name, int quantity, double price) {
+        this.productId = productId;
         this.image_url = image_url;
         this.name = name;
         this.quantity = quantity;
