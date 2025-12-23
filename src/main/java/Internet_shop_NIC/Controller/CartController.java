@@ -42,11 +42,15 @@ public class CartController {
         return cartService.getTotalAmountOfProductsInCart(usDetails);
     }
 
-    /*@GetMapping("/")
-    public CartPageResponse getCartPage(@AuthenticationPrincipal @Parameter(hidden = true)UsDetails usDetails)
-                                                                               {
-    }*/
+    @GetMapping("/cart")
+    @SecurityRequirement(name = "BearerAuth")
+    public CartPageResponse getCartPage(@AuthenticationPrincipal
+                                        @Parameter(hidden = true)
+                                        UsDetails usDetails) {
 
+        return cartService.getCartPageByUserId(usDetails);
+
+    }
 
 
 }

@@ -28,7 +28,7 @@ public class ProfileController {
                                               @Parameter(hidden = true)
                                               UsDetails usDetails) //Swagger
     {
-        return currentUserResponseMapper.toCurrentUserDTO(usDetails);
+        return currentUserResponseMapper.toCurrentUserResponse(usDetails);
     }
 
 }

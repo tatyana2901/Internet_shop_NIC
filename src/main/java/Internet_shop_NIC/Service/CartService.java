@@ -1,14 +1,12 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.CartItemResponse;
-import Internet_shop_NIC.DTO.CartItemUpdateRequest;
-import Internet_shop_NIC.DTO.CartPageResponse;
-import Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse;
+import Internet_shop_NIC.DTO.*;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.ProductNotFoundException;
 import Internet_shop_NIC.Mapper.CartItemResponseMapper;
+import Internet_shop_NIC.Mapper.CurrentUserResponseMapper;
 import Internet_shop_NIC.Repository.CartRepository;
 import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Security.UsDetails;
@@ -17,10 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,12 +25,14 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final CartItemResponseMapper cartItemResponseMapper;
+    private final CurrentUserResponseMapper currentUserResponseMapper;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemResponseMapper cartItemResponseMapper) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemResponseMapper cartItemResponseMapper, CurrentUserResponseMapper currentUserResponseMapper) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.cartItemResponseMapper = cartItemResponseMapper;
+        this.currentUserResponseMapper = currentUserResponseMapper;
     }
 
     @Transactional
@@ -78,27 +76,38 @@ public class CartService {
         return cartRepository.totalAmountOfProductsInCart(usDetails.getUser().getId());
     }
 
-    public CartPageResponse getCartPageByUserId(Long userId) {
+    public CartPageResponse getCartPageByUserId(UsDetails usDetails) {
+
+        CurrentUserResponse currentUserResponse = currentUserResponseMapper.toCurrentUserResponse(usDetails);
+        CartPageResponse cartPageResponse = new CartPageResponse(currentUserResponse);
+
+        Long userId = usDetails.getUser().getId();
 
         List<CartItem> allUserProducts = cartRepository.findAllByUserId(userId);
 
         if (!allUserProducts.isEmpty()) {
-            Map<Long, CartItem> cartProducts = allUserProducts.stream().collect(Collectors.toMap(CartItem::getProductId, item -> item));
+            Map<Long, CartItem> cartProducts = allUserProducts.stream().
+                    collect(Collectors.toMap(CartItem::getProductId, item -> item));
 
             List<Product> products = productRepository.findAllById(cartProducts.keySet());
 
-            List<CartItemResponse> cartItems = products.stream().map(new Function<Product, CartItemResponse>() {
-                @Override
-                public CartItemResponse apply(Product product) {
-                    Long productId = product.getId();
-                    CartItem cartItem = cartProducts.get(productId);
+            List<CartItemResponse> cartItems = products.stream()
+                    .map(product -> {
+                        Long productId = product.getId();
+                        CartItem cartItem = cartProducts.get(productId);
+                        return cartItemResponseMapper.toCartItemResponse(product, cartItem);
+                    })
+                    .collect(Collectors.toList());
 
-                    return cartItemResponseMapper.toCartItemResponse(product, cartItem);
-                }
-            }).collect(Collectors.toList());
+            Integer totalItems = cartItems.stream().mapToInt(CartItemResponse::getQuantity).sum();
+            Double totalPrice = cartItems.stream().mapToDouble(CartItemResponse::getTotalPrice).sum();
+
+            cartPageResponse.setItems(cartItems);
+            cartPageResponse.setTotalItems(totalItems);
+            cartPageResponse.setTotalPrice(totalPrice);
+
         }
-
-return null;
+        return cartPageResponse;
     }
 
 

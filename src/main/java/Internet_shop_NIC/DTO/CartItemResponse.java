@@ -48,6 +48,10 @@ public class CartItemResponse {
         this.price = price;
     }
 
+    public double getTotalPrice() {
+        return quantity * price;
+    }
+
     public CartItemResponse(Long productId, String image_url, String name, int quantity, double price) {
         this.productId = productId;
         this.image_url = image_url;
