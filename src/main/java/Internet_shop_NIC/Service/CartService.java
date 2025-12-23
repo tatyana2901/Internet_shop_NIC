@@ -8,6 +8,7 @@ import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.ProductNotFoundException;
+import Internet_shop_NIC.Mapper.CartItemResponseMapper;
 import Internet_shop_NIC.Repository.CartRepository;
 import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Security.UsDetails;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,11 +28,13 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartItemResponseMapper cartItemResponseMapper;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemResponseMapper cartItemResponseMapper) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
+        this.cartItemResponseMapper = cartItemResponseMapper;
     }
 
     @Transactional
@@ -78,26 +83,22 @@ public class CartService {
         List<CartItem> allUserProducts = cartRepository.findAllByUserId(userId);
 
         if (!allUserProducts.isEmpty()) {
-            List<Long> productIds = allUserProducts.stream().map(CartItem::getProductId).collect(Collectors.toList());
-            List<Product> products = productRepository.findAllById(productIds);
+            Map<Long, CartItem> cartProducts = allUserProducts.stream().collect(Collectors.toMap(CartItem::getProductId, item -> item));
 
+            List<Product> products = productRepository.findAllById(cartProducts.keySet());
 
-            allUserProducts.stream().map(new Function<CartItem, CartItemResponse>() {
+            List<CartItemResponse> cartItems = products.stream().map(new Function<Product, CartItemResponse>() {
                 @Override
-                public CartItemResponse apply(CartItem cartItem) {
-                    Long productId = cartItem.getProductId();
-                    int cartQuantity = cartItem.getQuantity();
-                    int stockQuantity = getProductQuantityInStock(productId);
-                    int cartItemResponseQuantity = Math.min(cartQuantity, stockQuantity);
+                public CartItemResponse apply(Product product) {
+                    Long productId = product.getId();
+                    CartItem cartItem = cartProducts.get(productId);
 
-
-                    return new CartItemResponse(productId, )
+                    return cartItemResponseMapper.toCartItemResponse(product, cartItem);
                 }
-            })
-
+            }).collect(Collectors.toList());
         }
 
-
+return null;
     }
 
 

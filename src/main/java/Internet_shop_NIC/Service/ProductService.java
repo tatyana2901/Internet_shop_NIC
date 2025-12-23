@@ -24,6 +24,10 @@ public class ProductService {
         this.productListingResponseMapper = productListingResponseMapper;
     }
 
+
+
+
+
     public List<ProductListingResponse> getSortedProductsByCategoryAndSubCat(Long categoryId, String sort, UsDetails usDetails) {
         if (categoryId != null && categoryId > 0 && sort != null) {
             List<Product> products;

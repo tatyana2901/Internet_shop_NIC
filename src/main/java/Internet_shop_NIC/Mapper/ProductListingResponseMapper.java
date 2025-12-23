@@ -27,7 +27,7 @@ public abstract class ProductListingResponseMapper {
     @AfterMapping
     protected void setDiscountedPrice(Product product, @MappingTarget ProductListingResponse productListingResponse, UsDetails usDetails) {
         if (usDetails != null && product.getDiscount_percent() != null) {
-            Double discountedPrice = product.getBase_price() * (1 - product.getDiscount_percent() / 100.00);
+            Double discountedPrice = product.getDiscountedPrice();
             productListingResponse.setDiscountedPrice(discountedPrice);
         }
     }

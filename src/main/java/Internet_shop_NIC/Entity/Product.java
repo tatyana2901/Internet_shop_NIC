@@ -106,6 +106,11 @@ public class Product {
         this.categories = categories;
     }
 
+    public Double getDiscountedPrice() {
+        if (discount_percent != null) {
+            return getBase_price() * (1 - getDiscount_percent() / 100.00);
+        } else return base_price;
+    }
 
     @Override
     public String toString() {
