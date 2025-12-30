@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-12-23T15:48:06+0300",
+    date = "2025-12-30T16:21:13+0300",
     comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_452 (Amazon.com Inc.)"
 )
 @Component
@@ -23,21 +23,19 @@ public class ProductListingResponseMapperImpl extends ProductListingResponseMapp
         Long id = null;
         String name = null;
         String description = null;
-        String image_url = null;
-        double base_price = 0.0d;
+        String imageUrl = null;
+        double basePrice = 0.0d;
         if ( product != null ) {
             id = product.getId();
             name = product.getName();
             description = product.getDescription();
-            image_url = product.getImage_url();
-            base_price = product.getBase_price();
+            imageUrl = product.getImageUrl();
+            basePrice = product.getBasePrice();
         }
 
-        ProductListingResponse productListingResponse = new ProductListingResponse( id, name, description, image_url, base_price );
+        ProductListingResponse productListingResponse = new ProductListingResponse( id, name, description, imageUrl, basePrice );
 
-        if ( product != null ) {
-            productListingResponse.setDiscountedPrice( product.getDiscountedPrice() );
-        }
+        productListingResponse.setDiscountedPrice( 0.0 );
 
         setAvailability( product, productListingResponse );
         setDiscountedPrice( product, productListingResponse, usDetails );

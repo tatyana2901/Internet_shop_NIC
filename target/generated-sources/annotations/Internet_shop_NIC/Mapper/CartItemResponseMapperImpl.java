@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-12-23T15:48:06+0300",
+    date = "2025-12-30T16:21:13+0300",
     comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_452 (Amazon.com Inc.)"
 )
 @Component
@@ -23,7 +23,7 @@ public class CartItemResponseMapperImpl extends CartItemResponseMapper {
         CartItemResponse cartItemResponse = new CartItemResponse();
 
         if ( product != null ) {
-            cartItemResponse.setImage_url( product.getImage_url() );
+            cartItemResponse.setImageUrl( product.getImageUrl() );
             cartItemResponse.setName( product.getName() );
         }
         if ( cartItem != null ) {
@@ -32,7 +32,7 @@ public class CartItemResponseMapperImpl extends CartItemResponseMapper {
         }
 
         setPrice( product, cartItemResponse );
-        setQuantity( product, cartItem, cartItemResponse );
+        setAvailableQuantity( product, cartItem, cartItemResponse );
 
         return cartItemResponse;
     }

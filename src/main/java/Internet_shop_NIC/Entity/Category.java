@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table
 public class Category {
 
     @Id
@@ -16,7 +16,7 @@ public class Category {
     @Column
     private String name;
     @Column
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToMany
     @JoinTable(
@@ -55,12 +55,12 @@ public class Category {
         this.parents = parents;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<Category> getChildren() {

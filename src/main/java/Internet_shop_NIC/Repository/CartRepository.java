@@ -22,7 +22,9 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
     @Query("SELECT new Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse(SUM(c.quantity)) FROM CartItem c WHERE c.userId = :userId")
     TotalAmountOfProductsInCartResponse totalAmountOfProductsInCart(@Param("userId") Long userId);
 
-
-
+    @Query("SELECT ci FROM CartItem ci LEFT JOIN Product p ON ci.productId = p.id WHERE ci.userId = :userId AND (ci.quantity>p.stockQuantity or p.stockQuantity IS NULL)")
+    List<CartItem> findNotInStockCartItemsId(@Param("userId") Long userId);
 
 }
+
+//select ci.id, stock_quantity from cart_item ci left join product p on product_id = p.id where user_id = 4 and ci.quantity>p.stock_quantity or p.stock_quantity is null;

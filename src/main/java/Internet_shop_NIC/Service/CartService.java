@@ -56,7 +56,7 @@ public class CartService {
                     newItem.setUserId(userId);
                     newItem.setProductId(productId);
                     newItem.setQuantity(0);
-                    newItem.setCreated_at(LocalDateTime.now());
+                    newItem.setCreatedAt(LocalDateTime.now());
                     return newItem;
                 });
 
@@ -69,7 +69,7 @@ public class CartService {
         return productRepository
                 .findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Не найден продукт по id " + productId))
-                .getStock_quantity();
+                .getStockQuantity();
     }
 
     public TotalAmountOfProductsInCartResponse getTotalAmountOfProductsInCart(UsDetails usDetails) {
@@ -99,7 +99,7 @@ public class CartService {
                     })
                     .collect(Collectors.toList());
 
-            Integer totalItems = cartItems.stream().mapToInt(CartItemResponse::getQuantity).sum();
+            Integer totalItems = cartItems.stream().mapToInt(CartItemResponse::getAvailableStock).sum();
             Double totalPrice = cartItems.stream().mapToDouble(CartItemResponse::getTotalPrice).sum();
 
             cartPageResponse.setItems(cartItems);

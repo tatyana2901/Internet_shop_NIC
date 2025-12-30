@@ -42,7 +42,7 @@ public class CartController {
         return cartService.getTotalAmountOfProductsInCart(usDetails);
     }
 
-    @GetMapping("/cart")
+    @GetMapping
     @SecurityRequirement(name = "BearerAuth")
     public CartPageResponse getCartPage(@AuthenticationPrincipal
                                         @Parameter(hidden = true)

@@ -5,21 +5,19 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cart_item")
+@Table
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column (name = "user_id")
     @NotNull
     private Long userId;
-    @Column(name = "product_id")
     @NotNull
     private Long productId;
     @Column
     private int quantity;
     @Column
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -53,13 +51,22 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                ", created_at=" + createdAt +
+                '}';
+    }
 }

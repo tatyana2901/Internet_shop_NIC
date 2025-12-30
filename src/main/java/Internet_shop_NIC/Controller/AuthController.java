@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-
+//ДОБАВИТЬ ОБРАОТКУ ОШИБКИ ЕСЛИ ПОЛЬЗОАТЕЛЬ НЕ НАйдЕН ПО ПОЧТЕ В СИСТЕМЕ!!!
 public class AuthController {
 
     private final AuthService authService;

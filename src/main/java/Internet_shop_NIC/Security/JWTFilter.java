@@ -45,8 +45,8 @@ public class JWTFilter extends OncePerRequestFilter {
             Users user = new Users();
             user.setId(claims.get("id", Long.class));
             user.setEmail(email);
-            user.setFirst_name(claims.get("firstName", String.class));
-            user.setLast_name(claims.get("lastName", String.class));
+            user.setFirstName(claims.get("firstName", String.class));
+            user.setLastName(claims.get("lastName", String.class));
             user.setRole(claims.get("role", String.class));
 
             UsDetails userDetails = new UsDetails(user);

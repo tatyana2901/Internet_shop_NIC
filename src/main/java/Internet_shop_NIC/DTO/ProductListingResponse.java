@@ -5,17 +5,17 @@ public class ProductListingResponse {
     private Long id;
     private String name;
     private String description;
-    private String image_url;
+    private String imageUrl;
     private String availability;
-    private double base_price;
+    private double basePrice;
     private Double discountedPrice;
 
-    public ProductListingResponse(Long id, String name, String description, String image_url, double base_price) {
+    public ProductListingResponse(Long id, String name, String description, String imageUrl, double basePrice) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.image_url = image_url;
-        this.base_price = base_price;
+        this.imageUrl = imageUrl;
+        this.basePrice = basePrice;
     }
 
     public String getDescription() {
@@ -26,12 +26,12 @@ public class ProductListingResponse {
         return availability;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public double getBase_price() {
-        return base_price;
+    public double getBasePrice() {
+        return basePrice;
     }
 
     public Double getDiscountedPrice() {
@@ -54,9 +54,9 @@ public class ProductListingResponse {
     public String toString() {
         return "ProductDTO{" +
                 "name='" + name + '\'' +
-                ", image_url='" + image_url + '\'' +
+                ", image_url='" + imageUrl + '\'' +
                 ", availability='" + availability + '\'' +
-                ", base_price=" + base_price +
+                ", base_price=" + basePrice +
                 ", discount_percent=" + discountedPrice +
                 '}';
     }

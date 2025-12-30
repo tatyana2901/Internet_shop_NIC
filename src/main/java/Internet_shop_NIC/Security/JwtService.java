@@ -8,7 +8,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -28,8 +27,8 @@ public class JwtService {
         Users user = usDetails.getUser();
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
-        claims.put("firstName", user.getFirst_name());
-        claims.put("lastName", user.getLast_name());
+        claims.put("firstName", user.getFirstName());
+        claims.put("lastName", user.getLastName());
         claims.put("role", user.getRole());
 
         return Jwts.builder()

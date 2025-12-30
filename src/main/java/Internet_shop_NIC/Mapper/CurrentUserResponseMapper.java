@@ -16,8 +16,8 @@ public abstract class CurrentUserResponseMapper {
     @AfterMapping
     protected void setCurrentUser(UsDetails usDetails, @MappingTarget CurrentUserResponse currentUserResponse) {
         Users user = usDetails.getUser();
-        String lastname = user.getLast_name();
-        String firstNameLetter = user.getFirst_name().substring(0, 1);
+        String lastname = user.getLastName();
+        String firstNameLetter = user.getFirstName().substring(0, 1);
         currentUserResponse.setCurrentUser(lastname + " " + firstNameLetter + ".");
     }
 

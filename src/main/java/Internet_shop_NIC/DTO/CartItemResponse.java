@@ -3,9 +3,10 @@ package Internet_shop_NIC.DTO;
 public class CartItemResponse {
 
     private Long productId;
-    private String image_url;
+    private String imageUrl;
     private String name;
     private int quantity; //проверить количество товара на складе - вдруг уже раскупили
+    private int availableStock;
     private double price; //скидочная цена если есть
 
     public Long getProductId() {
@@ -16,12 +17,12 @@ public class CartItemResponse {
         this.productId = productId;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -48,13 +49,21 @@ public class CartItemResponse {
         this.price = price;
     }
 
-    public double getTotalPrice() {
-        return quantity * price;
+    public int getAvailableStock() {
+        return availableStock;
     }
 
-    public CartItemResponse(Long productId, String image_url, String name, int quantity, double price) {
+    public void setAvailableStock(int availableStock) {
+        this.availableStock = availableStock;
+    }
+
+    public double getTotalPrice() {
+        return availableStock * price;
+    }
+
+    public CartItemResponse(Long productId, String imageUrl, String name, int quantity, double price) {
         this.productId = productId;
-        this.image_url = image_url;
+        this.imageUrl = imageUrl;
         this.name = name;
         this.quantity = quantity;
         this.price = price;

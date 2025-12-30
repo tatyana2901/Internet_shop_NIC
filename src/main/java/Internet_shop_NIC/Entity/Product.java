@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +17,15 @@ public class Product {
     @Column
     private String description;
     @Column
-    private String image_url;
+    private String imageUrl;
     @Column
-    private double base_price;
+    private double basePrice;
     @Column
-    private Integer discount_percent;
+    private Integer discountPercent;
     @Column
-    private int stock_quantity;
+    private int stockQuantity;
     @Column
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToMany
     @JoinTable(
@@ -58,44 +58,44 @@ public class Product {
         this.description = description;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public double getBase_price() {
-        return base_price;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setBase_price(double base_price) {
-        this.base_price = base_price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
-    public Integer getDiscount_percent() {
-        return discount_percent;
+    public Integer getDiscountPercent() {
+        return discountPercent;
     }
 
-    public void setDiscount_percent(Integer discount_percent) {
-        this.discount_percent = discount_percent;
+    public void setDiscountPercent(Integer discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
-    public int getStock_quantity() {
-        return stock_quantity;
+    public int getStockQuantity() {
+        return stockQuantity;
     }
 
-    public void setStock_quantity(int stock_quantity) {
-        this.stock_quantity = stock_quantity;
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<Category> getCategories() {
@@ -107,18 +107,18 @@ public class Product {
     }
 
     public Double getDiscountedPrice() {
-        if (discount_percent != null) {
-            return getBase_price() * (1 - getDiscount_percent() / 100.00);
-        } else return base_price;
+        if (discountPercent != null) {
+            return getBasePrice() * (1 - getDiscountPercent() / 100.00);
+        } else return basePrice;
     }
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", base_price=" + base_price +
-                ", discount_percent=" + discount_percent +
-                ", stock_quantity=" + stock_quantity +
+                ", base_price=" + basePrice +
+                ", discount_percent=" + discountPercent +
+                ", stock_quantity=" + stockQuantity +
                 '}';
     }
 }

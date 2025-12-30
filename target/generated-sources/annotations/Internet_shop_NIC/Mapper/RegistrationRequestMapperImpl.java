@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-12-18T15:26:36+0300",
-    comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_462 (Amazon.com Inc.)"
+    date = "2025-12-30T16:21:13+0300",
+    comments = "version: 1.6.3, compiler: javac, environment: Java 1.8.0_452 (Amazon.com Inc.)"
 )
 @Component
 public class RegistrationRequestMapperImpl extends RegistrationRequestMapper {
@@ -21,8 +21,6 @@ public class RegistrationRequestMapperImpl extends RegistrationRequestMapper {
 
         Users users = new Users();
 
-        users.setFirst_name( registrationRequest.getFirst_name() );
-        users.setLast_name( registrationRequest.getLast_name() );
         users.setEmail( registrationRequest.getEmail() );
 
         users.setCreatedAt( java.time.LocalDateTime.now() );
