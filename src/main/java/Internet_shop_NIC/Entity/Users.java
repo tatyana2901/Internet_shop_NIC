@@ -3,6 +3,7 @@ package Internet_shop_NIC.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table
@@ -24,6 +25,8 @@ public class Users {
     @Column
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Orders> orders;
 
     public Users() {
     }

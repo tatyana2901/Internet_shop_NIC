@@ -34,6 +34,8 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
+
+
     public String getName() {
         return name;
     }
