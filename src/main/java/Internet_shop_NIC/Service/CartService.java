@@ -26,13 +26,15 @@ public class CartService {
     private final ProductRepository productRepository;
     private final CartItemResponseMapper cartItemResponseMapper;
     private final CurrentUserResponseMapper currentUserResponseMapper;
+    private final UserService userService;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemResponseMapper cartItemResponseMapper, CurrentUserResponseMapper currentUserResponseMapper) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, CartItemResponseMapper cartItemResponseMapper, CurrentUserResponseMapper currentUserResponseMapper, UserService userService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.cartItemResponseMapper = cartItemResponseMapper;
         this.currentUserResponseMapper = currentUserResponseMapper;
+        this.userService = userService;
     }
 
     @Transactional
@@ -73,8 +75,10 @@ public class CartService {
     }
 
     public TotalAmountOfProductsInCartResponse getTotalAmountOfProductsInCart(UsDetails usDetails) {
-        return cartRepository.totalAmountOfProductsInCart(usDetails.getUser().getId());
+        Long userId = userService.getUserId(usDetails);
+        return cartRepository.totalAmountOfProductsInCart(userId);
     }
+
 
     public CartPageResponse getCartPageByUserId(UsDetails usDetails) {
 

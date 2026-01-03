@@ -25,8 +25,8 @@ public class Users {
     @Column
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<Orders> orders;
+   /* @OneToMany(mappedBy = "user")
+    private List<Orders> orders;*/
 
     public Users() {
     }

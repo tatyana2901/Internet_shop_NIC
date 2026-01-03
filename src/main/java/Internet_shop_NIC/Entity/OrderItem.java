@@ -25,7 +25,7 @@ public class OrderItem {
 
     @ManyToOne()
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product products;
+    private Product product;
 
     public OrderItem() {
     }
@@ -70,5 +70,12 @@ public class OrderItem {
         this.orders = orders;
     }
 
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
 }

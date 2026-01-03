@@ -6,6 +6,7 @@ import Internet_shop_NIC.Exception.NewUserDataRegistrationNotProvided;
 import Internet_shop_NIC.Exception.UserAlreadyExistException;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapper;
 import Internet_shop_NIC.Repository.UserRepository;
+import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,8 @@ public class UserService {
         create(user);
     }
 
+    public Long getUserId(UsDetails usDetails) {
+        return usDetails.getUser().getId();
+    }
 
 }
