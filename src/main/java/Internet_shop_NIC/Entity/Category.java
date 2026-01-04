@@ -3,6 +3,7 @@ package Internet_shop_NIC.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,13 +24,13 @@ public class Category {
             name = "category_parent",
             joinColumns = @JoinColumn(name = "child_id"),
             inverseJoinColumns = @JoinColumn(name = "parent_id"))
-    private List<Category> parents;
+    private List<Category> parents = new ArrayList<>();
 
     @ManyToMany(mappedBy = "parents")
-    private List<Category> children;
+    private List<Category> children = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     public Long getId() {
         return id;

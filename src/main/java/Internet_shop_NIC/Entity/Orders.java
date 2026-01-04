@@ -2,6 +2,7 @@ package Internet_shop_NIC.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,8 +21,8 @@ public class Orders {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private Users user;
 
-    @OneToMany(mappedBy = "orders")
-    private List<OrderItem> orderItems;
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public double getTotalAmount() {
         return totalAmount;

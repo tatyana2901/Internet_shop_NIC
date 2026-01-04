@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,25 +81,39 @@ public class CartService {
     }
 
 
+    public List<CartItem> getAllUserCartItems(Long userId) {
+        return cartRepository.findAllByUserId(userId);
+    }
+
+    public Map<Long, CartItem> mapCartItemsToProductIds(List<CartItem> cartItems) {
+       return cartItems.stream().
+                collect(Collectors.toMap(CartItem::getProductId, item -> item));
+
+    }
+
+    public List<Product> getProductsByUserCartItems(Map<Long, CartItem> mappedCartItemsToProductIds){
+
+        return productRepository.findAllById(mappedCartItemsToProductIds.keySet());
+    }
+
     public CartPageResponse getCartPageByUserId(UsDetails usDetails) {
 
         CurrentUserResponse currentUserResponse = currentUserResponseMapper.toCurrentUserResponse(usDetails);
         CartPageResponse cartPageResponse = new CartPageResponse(currentUserResponse);
 
-        Long userId = usDetails.getUser().getId();
+        Long userId = userService.getUserId(usDetails);
 
-        List<CartItem> allUserProducts = cartRepository.findAllByUserId(userId);
+        List<CartItem> allUserCartItems = getAllUserCartItems(userId);
 
-        if (!allUserProducts.isEmpty()) {
-            Map<Long, CartItem> cartProducts = allUserProducts.stream().
-                    collect(Collectors.toMap(CartItem::getProductId, item -> item));
+        if (!allUserCartItems.isEmpty()) {
+            Map<Long, CartItem> mappedCartItemsToProductIds = mapCartItemsToProductIds(allUserCartItems);
 
-            List<Product> products = productRepository.findAllById(cartProducts.keySet());
+            List<Product> products = getProductsByUserCartItems(mappedCartItemsToProductIds);
 
             List<CartItemResponse> cartItems = products.stream()
                     .map(product -> {
                         Long productId = product.getId();
-                        CartItem cartItem = cartProducts.get(productId);
+                        CartItem cartItem = mappedCartItemsToProductIds.get(productId);
                         return cartItemResponseMapper.toCartItemResponse(product, cartItem);
                     })
                     .collect(Collectors.toList());

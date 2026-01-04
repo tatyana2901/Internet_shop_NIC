@@ -7,21 +7,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InternetShopNicApplication implements CommandLineRunner {
-    @Autowired
-    private final CartRepository repository;
+public class InternetShopNicApplication  {
 
-    public InternetShopNicApplication(CartRepository repository) {
-        this.repository = repository;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(InternetShopNicApplication.class, args);
     }
 
 
-    @Override
+    /*@Override
     public void run(String... args) throws Exception {
         System.out.println(repository.findCartItemsNotInStock(4L));
-    }
+    }*/
 }

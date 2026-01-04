@@ -26,7 +26,7 @@ public class Users {
     private LocalDateTime createdAt;
 
    /* @OneToMany(mappedBy = "user")
-    private List<Orders> orders;*/
+    private List<Orders> orders = new ArrayList();*/
 
     public Users() {
     }

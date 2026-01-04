@@ -1,6 +1,7 @@
 package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.Entity.CartItem;
+import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Repository.CartRepository;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 @Service
 public class OrderService {
@@ -28,20 +31,23 @@ public class OrderService {
     }
 
     //@Transactional
-    public void makeOrder(UsDetails usDetails) {
-        Long id = userService.getUserId(usDetails);
-        List<CartItem> cartItemsNotInStock = cartRepository.findCartItemsNotInStock(id);
+    public void createOrder(UsDetails usDetails) {
+        Long userId = userService.getUserId(usDetails);
+        List<CartItem> cartItemsNotInStock = cartRepository.findCartItemsNotInStock(userId);
         if (!cartItemsNotInStock.isEmpty()) {
-            throw new OutOfStockProductException("Не хватает товара для оформления заказа. Уменьшите количество товара в соответствие с фактическим наличием.");
+            throw new OutOfStockProductException("Не хватает товара для оформления заказа. Уменьшите количество товара в соответствие с доступным остатком.");
         }
 
-        List<CartItem> cartItems = cartRepository.findAllByUserId(id);
+        List<CartItem> cartItems = cartService.getAllUserCartItems(userId);
 
         if (cartItems.isEmpty()) {
-            throw new CartIsEmptyException("Корзина пуста. Добавьте товары в корзину перед оформление заказа");
+            throw new CartIsEmptyException("Корзина пуста. Добавьте товары в корзину перед оформлением заказа");
         }
 
-//ИНИЦИАЛИЗИРОВАТЬ В СУЩНОСТЯХ ВСЕ СПИСКИ!!!!!!
+        Map<Long, CartItem> mappedCartItemsToProductIds = cartService.mapCartItemsToProductIds(cartItems);
+        List<Product> productsByUserCartItems = cartService.getProductsByUserCartItems(mappedCartItemsToProductIds);
+        //mapper fromCartItemToOrderItemMapper
+
 
 
     }
