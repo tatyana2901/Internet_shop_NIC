@@ -25,7 +25,7 @@ public class InternetShopNicApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Users users = userRepository.getReferenceById(4L);
-        orderService.createOrder(new UsDetails(users));
+
+      // orderService.createOrder(4L);
     }
 }

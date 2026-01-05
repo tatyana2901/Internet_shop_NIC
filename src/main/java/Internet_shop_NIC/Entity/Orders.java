@@ -1,5 +1,7 @@
 package Internet_shop_NIC.Entity;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,5 +68,17 @@ public class Orders {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "id=" + id +
+                ", totalPrice=" + totalPrice +
+                ", createdAt=" + createdAt +
+                ", user=" + user +
+                ", orderItems=" + orderItems +
+                '}';
     }
 }

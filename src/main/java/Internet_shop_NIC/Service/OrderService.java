@@ -6,6 +6,7 @@ import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Mapper.FromCartItemToOrderItemMapper;
 import Internet_shop_NIC.Repository.CartRepository;
 import Internet_shop_NIC.Repository.OrderRepository;
+import Internet_shop_NIC.Repository.UserRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,15 @@ public class OrderService {
     private final UserService userService;
     private final FromCartItemToOrderItemMapper orderItemMapper;
     private final OrderRepository orderRepository;
-
+private  final UserRepository ur;
     @Autowired
-    public OrderService(CartRepository cartRepository, CartService cartService, UserService userService, FromCartItemToOrderItemMapper orderItemMapper, OrderRepository orderRepository) {
+    public OrderService(CartRepository cartRepository, CartService cartService, UserService userService, FromCartItemToOrderItemMapper orderItemMapper, OrderRepository orderRepository, UserRepository ur) {
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.orderItemMapper = orderItemMapper;
         this.orderRepository = orderRepository;
+        this.ur = ur;
     }
 
     @Transactional
@@ -66,16 +68,18 @@ public class OrderService {
             }
         }).collect(Collectors.toList());
 
+
         Double orderTotalPrice = getOrderTotalPrice(orderItems);
         orders.setTotalPrice(orderTotalPrice);
         orders.setOrderItems(orderItems);
-        orderItems.forEach(items -> items.setOrders(orders));
         orders.setUser(users);
         orders.setCreatedAt(LocalDateTime.now());
+        orderItems.forEach(items -> items.setOrders(orders));
         orderRepository.save(orders);
 
-    }
 
+
+    }
 
     private Double getOrderTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
