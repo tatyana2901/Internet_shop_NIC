@@ -13,6 +13,7 @@ import org.mapstruct.MappingTarget;
 public abstract class FromCartItemToOrderItemMapper {
 
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "id", ignore = true)
     public abstract OrderItem ToOrderItem(Product product, CartItem cartItem);
 
 

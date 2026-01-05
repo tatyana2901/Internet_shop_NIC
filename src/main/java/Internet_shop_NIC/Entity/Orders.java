@@ -13,7 +13,7 @@ public class Orders {
     @Column
     private Long id;
     @Column
-    private double totalAmount;
+    private double totalPrice;
     @Column
     private LocalDateTime createdAt;
 
@@ -24,12 +24,12 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    public double getTotalAmount() {
-        return totalAmount;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() {

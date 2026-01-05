@@ -78,6 +78,9 @@ public class OrderItem {
         this.product = product;
     }
 
+    public Double getTotalPrice() {
+        return quantity * price;
+    }
 
 
 }

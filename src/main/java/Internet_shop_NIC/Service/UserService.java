@@ -43,7 +43,12 @@ public class UserService {
     }
 
     public Long getUserId(UsDetails usDetails) {
-        return usDetails.getUser().getId();
+        return getUser(usDetails).getId();
+    }
+
+    public Users getUser(UsDetails usDetails) {
+
+        return usDetails.getUser();
     }
 
 }

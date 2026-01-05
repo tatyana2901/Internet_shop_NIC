@@ -1,20 +1,20 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.Entity.CartItem;
-import Internet_shop_NIC.Entity.OrderItem;
-import Internet_shop_NIC.Entity.Product;
+import Internet_shop_NIC.Entity.*;
 import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Mapper.FromCartItemToOrderItemMapper;
 import Internet_shop_NIC.Repository.CartRepository;
+import Internet_shop_NIC.Repository.OrderRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,25 +25,28 @@ public class OrderService {
     private final CartService cartService;
     private final UserService userService;
     private final FromCartItemToOrderItemMapper orderItemMapper;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderService(CartRepository cartRepository, CartService cartService, UserService userService, FromCartItemToOrderItemMapper orderItemMapper) {
+    public OrderService(CartRepository cartRepository, CartService cartService, UserService userService, FromCartItemToOrderItemMapper orderItemMapper, OrderRepository orderRepository) {
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.orderItemMapper = orderItemMapper;
+        this.orderRepository = orderRepository;
     }
 
-    //@Transactional
+    @Transactional
     public void createOrder(UsDetails usDetails) {
         Long userId = userService.getUserId(usDetails);
+        Users users = userService.getUser(usDetails);
+
         List<CartItem> cartItemsNotInStock = cartRepository.findCartItemsNotInStock(userId);
         if (!cartItemsNotInStock.isEmpty()) {
             throw new OutOfStockProductException("Не хватает товара для оформления заказа. Уменьшите количество товара в соответствие с доступным остатком.");
         }
 
         List<CartItem> cartItems = cartService.getAllUserCartItems(userId);
-
         if (cartItems.isEmpty()) {
             throw new CartIsEmptyException("Корзина пуста. Добавьте товары в корзину перед оформлением заказа");
         }
@@ -51,24 +54,31 @@ public class OrderService {
         Map<Long, CartItem> mappedCartItemsToProductIds = cartService.mapCartItemsToProductIds(cartItems);
         List<Product> productsByUserCartItems = cartService.getProductsByUserCartItems(mappedCartItemsToProductIds);
 
-
+        Orders orders = new Orders();
         List<OrderItem> orderItems = productsByUserCartItems.stream().map(new Function<Product, OrderItem>() {
             @Override
             public OrderItem apply(Product product) {
                 Long productId = product.getId();
                 CartItem cartItem = mappedCartItemsToProductIds.get(productId);
                 OrderItem orderItem = orderItemMapper.ToOrderItem(product, cartItem);
-
-                //orderItem->orders
-                //orders->users
-                //orders->добавить orderItems
-                //save (orders)
-
+                //  orderItem.setOrders(orders);
                 return orderItem;
             }
         }).collect(Collectors.toList());
-        //mapper fromCartItemToOrderItemMapper
 
+        Double orderTotalPrice = getOrderTotalPrice(orderItems);
+        orders.setTotalPrice(orderTotalPrice);
+        orders.setOrderItems(orderItems);
+        orderItems.forEach(items -> items.setOrders(orders));
+        orders.setUser(users);
+        orders.setCreatedAt(LocalDateTime.now());
+        orderRepository.save(orders);
+
+    }
+
+
+    private Double getOrderTotalPrice(List<OrderItem> orderItems) {
+        return orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
 
     }
     //выполнить как транзакцию
