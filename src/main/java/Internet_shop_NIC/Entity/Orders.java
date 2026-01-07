@@ -67,7 +67,10 @@ public class Orders {
     }
 
     public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+        if (orderItems!=null) {
+            this.orderItems = orderItems;
+            orderItems.forEach(items -> items.setOrders(this));
+        }
     }
 
 

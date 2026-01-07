@@ -86,12 +86,12 @@ public class CartService {
     }
 
     public Map<Long, CartItem> mapCartItemsToProductIds(List<CartItem> cartItems) {
-       return cartItems.stream().
+        return cartItems.stream().
                 collect(Collectors.toMap(CartItem::getProductId, item -> item));
 
     }
 
-    public List<Product> getProductsByUserCartItems(Map<Long, CartItem> mappedCartItemsToProductIds){
+    public List<Product> getProductsByUserCartItems(Map<Long, CartItem> mappedCartItemsToProductIds) {
 
         return productRepository.findAllById(mappedCartItemsToProductIds.keySet());
     }
@@ -127,6 +127,12 @@ public class CartService {
 
         }
         return cartPageResponse;
+    }
+
+    public void deleteAllUserCartItems(Long userId) {
+        if (userService.ifUserExists(userId)) {
+            cartRepository.deleteAllByUserId(userId);
+        }
     }
 
 

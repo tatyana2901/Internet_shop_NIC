@@ -47,8 +47,14 @@ public class UserService {
     }
 
     public Users getUser(UsDetails usDetails) {
-
         return usDetails.getUser();
     }
 
+    public boolean ifUserExists(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    public Users getUserById(Long id){;
+        return userRepository.findById(id).get();
+    }
 }

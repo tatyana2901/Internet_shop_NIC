@@ -56,6 +56,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByCategoryAndSubcategorySortedOnBasePriceDESC(@Param("categoryId") Long id);
 
 
+
+
 //пришлось сделать два запроса из-за проблем с сортировкой - порядок сортировки невозможно подставить как параметр
 
 }

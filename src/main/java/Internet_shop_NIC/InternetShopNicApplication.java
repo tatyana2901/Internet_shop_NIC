@@ -26,6 +26,6 @@ public class InternetShopNicApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-      // orderService.createOrder(4L);
+       /*orderService.createOrder(4L);*/
     }
 }

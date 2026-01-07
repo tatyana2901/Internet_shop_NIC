@@ -19,6 +19,8 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
 
     void deleteByUserIdAndProductId(Long userId, Long productId);
 
+    void deleteAllByUserId(Long userId);
+
     @Query("SELECT new Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse(SUM(c.quantity)) FROM CartItem c WHERE c.userId = :userId")
     TotalAmountOfProductsInCartResponse totalAmountOfProductsInCart(@Param("userId") Long userId);
 
