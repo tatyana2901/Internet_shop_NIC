@@ -50,6 +50,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(CartIsEmptyException.class)
+    public ResponseEntity<ErrorResponse> handleCartIsEmpty(CartIsEmptyException ex) {
+        ErrorResponse error = new ErrorResponse(
+               HttpStatus.BAD_REQUEST.value(),
+                "Cart is empty",
+                "Cart is empty"
+        );
+        ex.printStackTrace();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         ErrorResponse error = new ErrorResponse(

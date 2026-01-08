@@ -6,6 +6,7 @@ import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.UserNotExistException;
 import Internet_shop_NIC.Mapper.FromCartItemToOrderItemMapper;
+import Internet_shop_NIC.Mapper.OrderConfirmationToEmailResponseMapper;
 import Internet_shop_NIC.Repository.CartRepository;
 import Internet_shop_NIC.Repository.OrderRepository;
 import Internet_shop_NIC.Security.UsDetails;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,7 @@ public class OrderService {
     private final FromCartItemToOrderItemMapper orderItemMapper;
     private final OrderRepository orderRepository;
     private final ProductService productService;
+    private final OrderConfirmationToEmailResponseMapper orderConfirmMapper;
 
     @Autowired
     public OrderService(YandexEmailService emailService,
@@ -35,7 +38,7 @@ public class OrderService {
                         CartService cartService,
                         UserService userService,
                         FromCartItemToOrderItemMapper orderItemMapper,
-                        OrderRepository orderRepository, ProductService productService) {
+                        OrderRepository orderRepository, ProductService productService, OrderConfirmationToEmailResponseMapper orderConfirmMapper) {
         this.emailService = emailService;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
@@ -43,9 +46,10 @@ public class OrderService {
         this.orderItemMapper = orderItemMapper;
         this.orderRepository = orderRepository;
         this.productService = productService;
+        this.orderConfirmMapper = orderConfirmMapper;
     }
 
-    @Transactional
+   /* @Transactional
     public void createOrder(UsDetails usDetails) {
         Long userId = userService.getUserId(usDetails);
         if (!userService.ifUserExists(userId)) {
@@ -83,10 +87,47 @@ public class OrderService {
         orderRepository.save(orders);
 
         List<OrderConfirmationToEmailResponse> orderConfirmItems = productsToOrderConfirmItems(productsByUserCartItems, mappedCartItemsToProductIds);
-        //orderTotalPrice
         String userEmail = users.getEmail();
         Long ordersNumber = orders.getId();
-        emailService.sendOrderConfirmation();
+        emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
+    }*/
+    @Transactional
+    public void createOrder(Long userId) {
+
+
+        List<CartItem> cartItemsNotInStock = cartRepository.findCartItemsNotInStock(userId);
+        if (!cartItemsNotInStock.isEmpty()) {
+            throw new OutOfStockProductException("Не хватает товара для оформления заказа. Уменьшите количество товара в соответствие с доступным остатком.");
+        }
+
+        List<CartItem> cartItems = cartService.getAllUserCartItems(userId);
+        if (cartItems.isEmpty()) {
+            throw new CartIsEmptyException("Корзина пуста. Добавьте товары в корзину перед оформлением заказа");
+        }
+
+        Map<Long, CartItem> mappedCartItemsToProductIds = cartService.mapCartItemsToProductIds(cartItems);
+        List<Product> productsByUserCartItems = cartService.getProductsByUserCartItems(mappedCartItemsToProductIds);
+
+        List<OrderItem> orderItems = productsToOrderItems(productsByUserCartItems, mappedCartItemsToProductIds);
+
+
+        Orders orders = new Orders();
+        Double orderTotalPrice = getOrderTotalPrice(orderItems);
+        orders.setTotalPrice(orderTotalPrice);
+        orders.setOrderItems(orderItems);
+        orders.setUser(userService.getUserById(userId));
+        orders.setCreatedAt(LocalDateTime.now());
+
+
+        List<Product> decreasedQuantityProducts = decreaseProductQuantity(productsByUserCartItems, mappedCartItemsToProductIds);
+        productService.updateProducts(decreasedQuantityProducts);
+        cartService.deleteAllUserCartItems(userId);
+        orderRepository.save(orders);
+
+        List<OrderConfirmationToEmailResponse> orderConfirmItems = productsToOrderConfirmItems(productsByUserCartItems, mappedCartItemsToProductIds);
+        String userEmail = userService.getUserById(userId).getEmail();
+        Long ordersNumber = orders.getId();
+        emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
     }
 
     private Double getOrderTotalPrice(List<OrderItem> orderItems) {
@@ -97,8 +138,7 @@ public class OrderService {
                                                  Map<Long, CartItem> mappedCartItemsToProductIds) {
         return productsByUserCartItems.stream()
                 .map(product -> {
-                    Long productId = product.getId();
-                    CartItem cartItem = mappedCartItemsToProductIds.get(productId);
+                    CartItem cartItem = getCartItemByProduct(mappedCartItemsToProductIds, product);
                     return orderItemMapper.ToOrderItem(product, cartItem);
                 })
                 .collect(Collectors.toList());
@@ -108,8 +148,8 @@ public class OrderService {
                                                   Map<Long, CartItem> mappedCartItemsToProductIds) {
 
         productsByUserCartItems.forEach(product -> {
-            Long productId = product.getId();
-            int cartItemQuantity = mappedCartItemsToProductIds.get(productId).getQuantity();
+            CartItem cartItem = getCartItemByProduct(mappedCartItemsToProductIds, product);
+            int cartItemQuantity = cartItem.getQuantity();
             int decreasedProductQuantity = product.getStockQuantity() - cartItemQuantity;
             product.setStockQuantity(decreasedProductQuantity);
         });
@@ -118,8 +158,18 @@ public class OrderService {
 
     private List<OrderConfirmationToEmailResponse> productsToOrderConfirmItems(List<Product> productsByUserCartItems,
                                                                                Map<Long, CartItem> mappedCartItemsToProductIds) {
+        return productsByUserCartItems.stream()
+                .map(product -> {
+                    CartItem cartItem = getCartItemByProduct(mappedCartItemsToProductIds, product);
+                    return orderConfirmMapper.toOrderConfirmationToEmailResponse(product, cartItem);
+                })
+                .collect(Collectors.toList());
 
+    }
 
+    private CartItem getCartItemByProduct(Map<Long, CartItem> mappedCartItemsToProductIds, Product product) {
+        Long productId = product.getId();
+        return mappedCartItemsToProductIds.get(productId);
     }
     //выполнить как транзакцию
     //получить все товары из корзины

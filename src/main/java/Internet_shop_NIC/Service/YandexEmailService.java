@@ -1,5 +1,6 @@
 package Internet_shop_NIC.Service;
 
+import Internet_shop_NIC.DTO.OrderConfirmationToEmailResponse;
 import Internet_shop_NIC.Entity.OrderItem;
 import Internet_shop_NIC.Entity.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,12 @@ public class YandexEmailService {
         this.senderEmail = senderEmail;
     }
 
-    public void sendOrderConfirmation(String to, Orders order, Iterable<OrderItem> items) {
+    public void sendOrderConfirmation(String to, Double ordersTotalPrice, Long ordersNumber, Iterable<OrderConfirmationToEmailResponse> items) {
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("ваш@yandex.ru");
+        msg.setFrom(senderEmail);
         msg.setTo(to);
-        msg.setSubject("Заказ оформлен");
-        msg.setText("Текст...");
+        msg.setSubject("Вы оформили заказ № " + ordersNumber + ":");
+        msg.setText(items.toString() + " \\nОбщая сумма заказа составила " + ordersTotalPrice + " рублей.");
         mailSender.send(msg);
     }
 }

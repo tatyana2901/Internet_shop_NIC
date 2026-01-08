@@ -17,7 +17,7 @@ public class OrderController {
     public OrderController(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
-
+//Добавить эндпоинт к секьюрити
   /*  @PostMapping
     public void makeOrder() {
 
