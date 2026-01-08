@@ -43,7 +43,6 @@ public class ProductService {
         }
         throw new IllegalArgumentException("categoryId is incorrect");
     }
-    //метод количества товаров  категории
 
 
     public List<ProductCatalogResponse> getDirectProductsByCategory(Long categoryId) {
@@ -54,7 +53,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public void updateProductsStockQuantity(List<Product> products) {
+    public void updateProducts(List<Product> products) {
 
         productRepository.saveAll(products);
 

@@ -1,5 +1,6 @@
 package Internet_shop_NIC.Service;
 
+import Internet_shop_NIC.DTO.OrderConfirmationToEmailResponse;
 import Internet_shop_NIC.Entity.*;
 import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
@@ -7,7 +8,6 @@ import Internet_shop_NIC.Exception.UserNotExistException;
 import Internet_shop_NIC.Mapper.FromCartItemToOrderItemMapper;
 import Internet_shop_NIC.Repository.CartRepository;
 import Internet_shop_NIC.Repository.OrderRepository;
-import Internet_shop_NIC.Repository.UserRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
-
+    private final YandexEmailService emailService;
     private final CartRepository cartRepository;
     private final CartService cartService;
     private final UserService userService;
@@ -32,11 +30,13 @@ public class OrderService {
     private final ProductService productService;
 
     @Autowired
-    public OrderService(CartRepository cartRepository,
+    public OrderService(YandexEmailService emailService,
+                        CartRepository cartRepository,
                         CartService cartService,
                         UserService userService,
                         FromCartItemToOrderItemMapper orderItemMapper,
                         OrderRepository orderRepository, ProductService productService) {
+        this.emailService = emailService;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.userService = userService;
@@ -68,6 +68,7 @@ public class OrderService {
 
         List<OrderItem> orderItems = productsToOrderItems(productsByUserCartItems, mappedCartItemsToProductIds);
 
+
         Orders orders = new Orders();
         Double orderTotalPrice = getOrderTotalPrice(orderItems);
         orders.setTotalPrice(orderTotalPrice);
@@ -77,16 +78,23 @@ public class OrderService {
 
 
         List<Product> decreasedQuantityProducts = decreaseProductQuantity(productsByUserCartItems, mappedCartItemsToProductIds);
-        productService.updateProductsStockQuantity(decreasedQuantityProducts);
+        productService.updateProducts(decreasedQuantityProducts);
         cartService.deleteAllUserCartItems(userId);
         orderRepository.save(orders);
+
+        List<OrderConfirmationToEmailResponse> orderConfirmItems = productsToOrderConfirmItems(productsByUserCartItems, mappedCartItemsToProductIds);
+        //orderTotalPrice
+        String userEmail = users.getEmail();
+        Long ordersNumber = orders.getId();
+        emailService.sendOrderConfirmation();
     }
 
     private Double getOrderTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
     }
 
-    private List<OrderItem> productsToOrderItems(List<Product> productsByUserCartItems, Map<Long, CartItem> mappedCartItemsToProductIds) {
+    private List<OrderItem> productsToOrderItems(List<Product> productsByUserCartItems,
+                                                 Map<Long, CartItem> mappedCartItemsToProductIds) {
         return productsByUserCartItems.stream()
                 .map(product -> {
                     Long productId = product.getId();
@@ -96,7 +104,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    private List<Product> decreaseProductQuantity(List<Product> productsByUserCartItems, Map<Long, CartItem> mappedCartItemsToProductIds) {
+    private List<Product> decreaseProductQuantity(List<Product> productsByUserCartItems,
+                                                  Map<Long, CartItem> mappedCartItemsToProductIds) {
 
         productsByUserCartItems.forEach(product -> {
             Long productId = product.getId();
@@ -105,6 +114,12 @@ public class OrderService {
             product.setStockQuantity(decreasedProductQuantity);
         });
         return productsByUserCartItems;
+    }
+
+    private List<OrderConfirmationToEmailResponse> productsToOrderConfirmItems(List<Product> productsByUserCartItems,
+                                                                               Map<Long, CartItem> mappedCartItemsToProductIds) {
+
+
     }
     //выполнить как транзакцию
     //получить все товары из корзины
