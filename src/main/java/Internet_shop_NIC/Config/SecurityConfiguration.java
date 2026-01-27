@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                 .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**", "/webjars/**").permitAll()
                 .antMatchers("/profile/me").authenticated()
                 .antMatchers("/cart/**").authenticated()
+                .antMatchers("/orders").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

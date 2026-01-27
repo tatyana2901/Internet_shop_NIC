@@ -49,7 +49,7 @@ public class OrderService {
         this.orderConfirmMapper = orderConfirmMapper;
     }
 
-   /* @Transactional
+    @Transactional
     public void createOrder(UsDetails usDetails) {
         Long userId = userService.getUserId(usDetails);
         if (!userService.ifUserExists(userId)) {
@@ -90,8 +90,8 @@ public class OrderService {
         String userEmail = users.getEmail();
         Long ordersNumber = orders.getId();
         emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
-    }*/
-    @Transactional
+    }
+    /*@Transactional
     public void createOrder(Long userId) {
 
 
@@ -128,7 +128,7 @@ public class OrderService {
         String userEmail = userService.getUserById(userId).getEmail();
         Long ordersNumber = orders.getId();
         emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
-    }
+    }*/
 
     private Double getOrderTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
