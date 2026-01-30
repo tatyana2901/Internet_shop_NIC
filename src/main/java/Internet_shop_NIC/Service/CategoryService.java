@@ -25,6 +25,7 @@ public class CategoryService {
 
     public List<CategoryResponse> getRootCategories() {
         List<Category> categories = categoryRepository.findByParentsIsEmpty();
+        //проверить на empty
         return categories.stream()
                 .map(categoryResponseMapper::toCategoryResponse)
                 .collect(Collectors.toList());

@@ -4,6 +4,7 @@ import Internet_shop_NIC.DTO.CartPageResponse;
 import Internet_shop_NIC.DTO.CategoryResponse;
 import Internet_shop_NIC.Entity.Category;
 import Internet_shop_NIC.Mapper.CategoryResponseMapper;
+import Internet_shop_NIC.Mapper.CategoryResponseMapperImpl;
 import Internet_shop_NIC.Repository.CategoryRepository;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +28,8 @@ class CategoryServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
-    private CategoryResponseMapper categoryResponseMapper;
+    @Spy
+    private CategoryResponseMapper categoryResponseMapper = new CategoryResponseMapperImpl();
 
     @InjectMocks
     private CategoryService categoryService;
@@ -49,14 +52,14 @@ class CategoryServiceTest {
         CategoryResponse categoryResponse2 = new CategoryResponse();
         categoryResponse2.setId(2L);
 
-        when(categoryResponseMapper.toCategoryResponse(category1)).thenReturn(categoryResponse1);
-        when(categoryResponseMapper.toCategoryResponse(category2)).thenReturn(categoryResponse2);
+      //  when(categoryResponseMapper.toCategoryResponse(category1)).thenReturn(categoryResponse1);
+     //   when(categoryResponseMapper.toCategoryResponse(category2)).thenReturn(categoryResponse2);
 
         List<CategoryResponse> result = categoryService.getRootCategories();
 
         assertEquals(2, result.size());
-        assertEquals(categoryResponse1, result.get(0));
-        assertEquals(categoryResponse2, result.get(1));
+        assertEquals(categoryResponse1.getId(), result.get(0).getId());
+        assertEquals(categoryResponse2.getId(), result.get(1).getId());
 
         verify(categoryRepository, times(1)).findByParentsIsEmpty();
         verify(categoryResponseMapper, times(1)).toCategoryResponse(categories.get(0));

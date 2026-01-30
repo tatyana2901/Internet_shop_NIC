@@ -3,6 +3,8 @@ package Internet_shop_NIC.Exception;
 import Internet_shop_NIC.DTO.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -62,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class)
+   /* @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -71,8 +73,28 @@ public class GlobalExceptionHandler {
         );
         ex.printStackTrace(); // или использовать Logger
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
+        @ExceptionHandler(BadCredentialsException.class)
+        public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "AUTH_ERROR",
+                    "Uncorrected Password or login"
 
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        @ExceptionHandler(AuthenticationException.class)
+        public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex) {
+            ErrorResponse error = new ErrorResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "AUTH_ERROR",
+                    "Auth fail"
+
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
 
 }
