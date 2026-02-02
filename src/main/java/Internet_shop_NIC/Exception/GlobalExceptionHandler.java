@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CartIsEmptyException.class)
     public ResponseEntity<ErrorResponse> handleCartIsEmpty(CartIsEmptyException ex) {
         ErrorResponse error = new ErrorResponse(
-               HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 "Cart is empty",
                 "Cart is empty"
         );
@@ -63,8 +63,39 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoRootCategoryException.class)
+    public ResponseEntity<ErrorResponse> handleNoRootCategoryException(NoRootCategoryException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Root Category not found",
+                "Root Category not found"
 
-   /* @ExceptionHandler(Exception.class)
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "AUTH_ERROR",
+                "Uncorrected Password or login"
+
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "AUTH_ERROR",
+                "Auth fail"
+
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+ /* @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -74,27 +105,4 @@ public class GlobalExceptionHandler {
         ex.printStackTrace(); // или использовать Logger
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }*/
-
-        @ExceptionHandler(BadCredentialsException.class)
-        public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
-            ErrorResponse error = new ErrorResponse(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "AUTH_ERROR",
-                    "Uncorrected Password or login"
-
-            );
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
-
-        @ExceptionHandler(AuthenticationException.class)
-        public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex) {
-            ErrorResponse error = new ErrorResponse(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    "AUTH_ERROR",
-                    "Auth fail"
-
-            );
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-        }
-
 }

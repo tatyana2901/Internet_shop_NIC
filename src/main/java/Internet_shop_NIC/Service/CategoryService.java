@@ -2,6 +2,7 @@ package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.CategoryResponse;
 import Internet_shop_NIC.Entity.Category;
+import Internet_shop_NIC.Exception.NoRootCategoryException;
 import Internet_shop_NIC.Mapper.CategoryResponseMapper;
 import Internet_shop_NIC.Repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ public class CategoryService {
 
     public List<CategoryResponse> getRootCategories() {
         List<Category> categories = categoryRepository.findByParentsIsEmpty();
-        //проверить на empty
+        if (categories.isEmpty()) {
+            throw new NoRootCategoryException("Не найдены корневые категории.");
+        }
         return categories.stream()
                 .map(categoryResponseMapper::toCategoryResponse)
                 .collect(Collectors.toList());
-
-
     }
 
     @Transactional // работает и без нее, но непонятно, почему
@@ -43,7 +44,6 @@ public class CategoryService {
         }
         throw new IllegalArgumentException("parentId is incorrect");
     }
-
 
 
 }

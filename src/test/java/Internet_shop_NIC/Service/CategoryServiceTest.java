@@ -3,6 +3,7 @@ package Internet_shop_NIC.Service;
 import Internet_shop_NIC.DTO.CartPageResponse;
 import Internet_shop_NIC.DTO.CategoryResponse;
 import Internet_shop_NIC.Entity.Category;
+import Internet_shop_NIC.Exception.NoRootCategoryException;
 import Internet_shop_NIC.Mapper.CategoryResponseMapper;
 import Internet_shop_NIC.Mapper.CategoryResponseMapperImpl;
 import Internet_shop_NIC.Repository.CategoryRepository;
@@ -35,7 +36,7 @@ class CategoryServiceTest {
     private CategoryService categoryService;
 
     @Test
-    void getRootCategories_shouldReturnListOfCategoryResponse() {
+    void getRootCategories_ShouldReturnListOfCategoryResponse() {
         List<Category> categories = new ArrayList<>();
 
         Category category1 = new Category();
@@ -52,9 +53,6 @@ class CategoryServiceTest {
         CategoryResponse categoryResponse2 = new CategoryResponse();
         categoryResponse2.setId(2L);
 
-      //  when(categoryResponseMapper.toCategoryResponse(category1)).thenReturn(categoryResponse1);
-     //   when(categoryResponseMapper.toCategoryResponse(category2)).thenReturn(categoryResponse2);
-
         List<CategoryResponse> result = categoryService.getRootCategories();
 
         assertEquals(2, result.size());
@@ -67,18 +65,16 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getRootCategories_shouldReturnEmptyList_WhenNoCategories() {
+    void getRootCategories_ShouldThrowNoRootCategoryException_WhenParentsListIsEmpty() {
         when(categoryRepository.findByParentsIsEmpty()).thenReturn(new ArrayList<>());
-
-        List<CategoryResponse> result = categoryService.getRootCategories();
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
-        verify(categoryRepository).findByParentsIsEmpty();
+        assertThrows(NoRootCategoryException.class, () -> {
+            categoryService.getRootCategories();
+        });
     }
 
+
     @Test
-    void getSubCategories_shouldReturnMappedSubCategories() {
+    void getSubCategories_ShouldReturnMappedSubCategories() {
         Category testCategory = new Category();
         testCategory.setId(1L);
         Category childCategory = new Category();
@@ -105,7 +101,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getSubCategories_shouldReturnEmptyList_WhenNoChildren() {
+    void getSubCategories_ShouldReturnEmptyList_WhenNoChildren() {
         Category testCategory = new Category();
         testCategory.setId(1L);
         testCategory.setChildren(new ArrayList<>());
@@ -119,7 +115,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getSubCategories_shouldThrows_WhenInvalidParentId() {
+    void getSubCategories_ShouldThrows_WhenInvalidParentId() {
         assertThrows(IllegalArgumentException.class, () -> {
             categoryService.getSubCategories(0L);
         });
