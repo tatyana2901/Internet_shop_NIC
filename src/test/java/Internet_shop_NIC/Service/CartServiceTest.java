@@ -4,6 +4,7 @@ import Internet_shop_NIC.DTO.CartItemUpdateRequest;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Entity.Users;
+import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Mapper.CartItemResponseMapper;
 import Internet_shop_NIC.Mapper.CartItemResponseMapperImpl;
 import Internet_shop_NIC.Mapper.CurrentUserResponseMapper;
@@ -94,6 +95,37 @@ class CartServiceTest {
         assertEquals(3, existingCartItem.getQuantity());
         verify(cartRepository).save(existingCartItem);
         verify(cartRepository, never()).deleteByUserIdAndProductId(anyLong(), anyLong());
+    }
+
+    @Test
+    void updateCartItemQuantity_ShouldThrowsOutOfStockProductExceptionWhenQuantityStockIsNotEnough() {
+        CartItemUpdateRequest request = new CartItemUpdateRequest();
+
+        user = new Users();
+        user.setId(2L);
+        usDetails = new UsDetails(user);
+
+        request.setProductId(100L);
+        request.setQuantity(15);
+
+        Product product = new Product();
+        product.setId(100L);
+        product.setStockQuantity(10);
+
+        when(productRepository.findById(100L)).thenReturn(Optional.of(product));
+
+        OutOfStockProductException exception = assertThrows(
+                OutOfStockProductException.class,
+                () -> cartService.updateCartItemQuantity(request, usDetails)
+        );
+
+        assertTrue(exception.getMessage().contains("Недостаточно товара на складе"));
+        assertTrue(exception.getMessage().contains("На складе товара: 10"));
+        assertTrue(exception.getMessage().contains("вы кладете в корзину: 15"));
+
+        verify(cartRepository, never()).save(any());
+        verify(cartRepository, never()).deleteByUserIdAndProductId(anyLong(), anyLong());
+        verify(cartRepository, never()).findByUserIdAndProductId(anyLong(), anyLong());
     }
 
 
