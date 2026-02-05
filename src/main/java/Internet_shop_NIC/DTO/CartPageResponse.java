@@ -1,12 +1,13 @@
 package Internet_shop_NIC.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CartPageResponse {
     private CurrentUserResponse currentUserResponse;      // "Иванов А."
-    private List<CartItemResponse> items;     // товары с галочкой
-    private Integer totalItems;              // общее количество
-    private Double totalPrice;
+    private List<CartItemResponse> items = new ArrayList<>();     // товары с галочкой
+    private Integer totalItems = 0;            // общее количество
+    private Double totalPrice = 0.0;
 
     public CartPageResponse(CurrentUserResponse currentUserResponse) {
         this.currentUserResponse = currentUserResponse;
