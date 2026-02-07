@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -120,10 +122,11 @@ public class CartService {
 
             Integer totalItems = cartItems.stream().mapToInt(CartItemResponse::getAvailableStock).sum();
             Double totalPrice = cartItems.stream().mapToDouble(CartItemResponse::getTotalPrice).sum();
+            Double twoDecimalRoundedTotalPrice = BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP).doubleValue();
 
             cartPageResponse.setItems(cartItems);
             cartPageResponse.setTotalItems(totalItems);
-            cartPageResponse.setTotalPrice(totalPrice);
+            cartPageResponse.setTotalPrice(twoDecimalRoundedTotalPrice);
 
         }
         return cartPageResponse;

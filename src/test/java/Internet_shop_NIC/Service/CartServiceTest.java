@@ -1,5 +1,6 @@
 package Internet_shop_NIC.Service;
 
+import Internet_shop_NIC.DTO.CartItemResponse;
 import Internet_shop_NIC.DTO.CartItemUpdateRequest;
 import Internet_shop_NIC.DTO.CartPageResponse;
 import Internet_shop_NIC.Entity.CartItem;
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,19 +50,57 @@ class CartServiceTest {
     private CartItemUpdateRequest cartItemUpdateRequest;
     private UsDetails usDetails;
     private Users user;
-    private Product product;
+    private CartItem cartItem1;
+    private CartItem cartItem2;
+    private Product product1;
+    private Product product2;
 
+    void setUpUser() {
+        user = new Users();
+        user.setId(1L);
+        user.setEmail("test@example.com");
+        user.setFirstName("test");
+        user.setLastName("testTest");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setRole("Role");
+        usDetails = new UsDetails(user);
+    }
+
+    void setUpCartItems() {
+        cartItem1 = new CartItem();
+        cartItem1.setId(1L);
+        cartItem1.setUserId(1L);
+        cartItem1.setProductId(100L);
+        cartItem1.setQuantity(2);
+
+        cartItem2 = new CartItem();
+        cartItem2.setId(2L);
+        cartItem2.setUserId(1L);
+        cartItem2.setProductId(200L);
+        cartItem2.setQuantity(1);
+    }
+
+    void setUpProducts() {
+        product1 = new Product();
+        product1.setId(100L);
+        product1.setName("Product 1");
+        product1.setBasePrice(10.5);
+        product1.setDiscountPercent(3);
+        product1.setStockQuantity(5);
+
+        product2 = new Product();
+        product2.setId(200L);
+        product2.setName("Product 2");
+        product2.setBasePrice(20.0);
+        product2.setStockQuantity(3);
+    }
 
     @Test
     void updateCartItemQuantity_ShouldDeleteCartItemWhenZeroQuantity() {
-        cartItemUpdateRequest = new CartItemUpdateRequest();
-        user = new Users();
-        user.setId(1L);
-        usDetails = new UsDetails(user);
-        product = new Product();
-        product.setId(100L);
-        product.setStockQuantity(10);
+        setUpUser();
+        setUpProducts();
 
+        cartItemUpdateRequest = new CartItemUpdateRequest();
         cartItemUpdateRequest.setProductId(100L);
         cartItemUpdateRequest.setQuantity(0);
 
@@ -73,24 +113,23 @@ class CartServiceTest {
 
     @Test
     void updateCartItemQuantity_ShouldUpdateExistingCartItemQuantity() {
+        setUpUser();
+        setUpProducts();
+
         cartItemUpdateRequest = new CartItemUpdateRequest();
-        product = new Product();
-        user = new Users();
-        user.setId(1L);
-        usDetails = new UsDetails(user);
-        cartItemUpdateRequest.setProductId(90L);
+        cartItemUpdateRequest.setProductId(100L);
         cartItemUpdateRequest.setQuantity(3);
-        product.setStockQuantity(10);
-        when(productRepository.findById(90L)).thenReturn(Optional.of(product));
+        product1.setStockQuantity(5);
+        when(productRepository.findById(100L)).thenReturn(Optional.of(product1));
 
         CartItem existingCartItem = new CartItem();
         existingCartItem.setId(50L);
         existingCartItem.setUserId(1L);
-        existingCartItem.setProductId(90L);
+        existingCartItem.setProductId(100L);
         existingCartItem.setQuantity(1);
         existingCartItem.setCreatedAt(LocalDateTime.now());
 
-        when(cartRepository.findByUserIdAndProductId(1L, 90L))
+        when(cartRepository.findByUserIdAndProductId(1L, 100L))
                 .thenReturn(Optional.of(existingCartItem));
 
         cartService.updateCartItemQuantity(cartItemUpdateRequest, usDetails);
@@ -102,20 +141,14 @@ class CartServiceTest {
 
     @Test
     void updateCartItemQuantity_ShouldThrowsOutOfStockProductExceptionWhenQuantityStockIsNotEnough() {
+        setUpUser();
+        setUpProducts();
         CartItemUpdateRequest request = new CartItemUpdateRequest();
-
-        user = new Users();
-        user.setId(2L);
-        usDetails = new UsDetails(user);
 
         request.setProductId(100L);
         request.setQuantity(15);
 
-        Product product = new Product();
-        product.setId(100L);
-        product.setStockQuantity(10);
-
-        when(productRepository.findById(100L)).thenReturn(Optional.of(product));
+        when(productRepository.findById(100L)).thenReturn(Optional.of(product1));
 
         OutOfStockProductException exception = assertThrows(
                 OutOfStockProductException.class,
@@ -123,7 +156,7 @@ class CartServiceTest {
         );
 
         assertTrue(exception.getMessage().contains("Недостаточно товара на складе"));
-        assertTrue(exception.getMessage().contains("На складе товара: 10"));
+        assertTrue(exception.getMessage().contains("На складе товара: 5"));
         assertTrue(exception.getMessage().contains("вы кладете в корзину: 15"));
 
         verify(cartRepository, never()).save(any());
@@ -135,9 +168,7 @@ class CartServiceTest {
     void updateCartItemQuantity_ShouldThrowsProductNotFoundExceptionWhenProductIsNotFound() {
         CartItemUpdateRequest request = new CartItemUpdateRequest();
 
-        user = new Users();
-        user.setId(1L);
-        usDetails = new UsDetails(user);
+        setUpUser();
 
         request.setProductId(10L);
         request.setQuantity(12);
@@ -177,53 +208,9 @@ class CartServiceTest {
         assertTrue(result.keySet().containsAll(Arrays.asList(100L, 200L, 300L)));
     }
 
- /*   void setUpBeforeGetCartPageByUserIdTest() {
-
-
-        user = new Users();
-        user.setId(1L);
-        user.setUsername("testuser");
-
-        usDetails = new UsDetails(user);
-        usDetails.setUsername("testuser");
-
-
-        product1 = new Product();
-        product1.setId(100L);
-        product1.setName("Product 1");
-        product1.setPrice(10.5);
-        product1.setStock(5);
-
-        product2 = new Product();
-        product2.setId(200L);
-        product2.setName("Product 2");
-        product2.setPrice(20.0);
-        product2.setStock(3);
-
-        cartItem1 = new CartItem();
-        cartItem1.setId(1L);
-        cartItem1.setUserId(1L);
-        cartItem1.setProductId(100L);
-        cartItem1.setQuantity(2);
-
-        cartItem2 = new CartItem();
-        cartItem2.setId(2L);
-        cartItem2.setUserId(1L);
-        cartItem2.setProductId(200L);
-        cartItem2.setQuantity(1);
-    }*/
-
     @Test
     void getCartPageByUserId_ShouldReturnZeroTotalsWhenEmptyCart() {
-        user = new Users();
-        user.setId(1L);
-        user.setEmail("test@example.com");
-        user.setFirstName("test");
-        user.setLastName("testTest");
-        user.setCreatedAt(LocalDateTime.now());
-        user.setRole("Role");
-
-        usDetails = new UsDetails(user);
+        setUpUser();
         when(userService.getUserId(usDetails)).thenReturn(1L);
         when(cartRepository.findAllByUserId(1L)).thenReturn(Collections.emptyList());
 
@@ -238,26 +225,45 @@ class CartServiceTest {
         assertEquals(0.0, response.getTotalPrice());
     }
 
-  /*  @Test
+    @Test
     void getCartPageByUserId_ShouldReturnCorrectCartPage() {
+        setUpUser();
+        setUpCartItems();
+        setUpProducts();
 
         when(userService.getUserId(usDetails)).thenReturn(1L);
-        when(cartRepository.findByUserId(1L)).thenReturn(Arrays.asList(cartItem1, cartItem2));
+        when(cartRepository.findAllByUserId(1L)).thenReturn(Arrays.asList(cartItem1, cartItem2));
 
-        // Маппинг продуктов по ID для запроса
-        Map<Long, CartItem> cartItemsMap = Arrays.asList(cartItem1, cartItem2).stream()
+        Map<Long, CartItem> cartItemsMap = Stream.of(cartItem1, cartItem2)
                 .collect(Collectors.toMap(CartItem::getProductId, ci -> ci));
-…        assertEquals(8, response.getTotalItems()); // 5 + 3 (сумма стоков)
-        assertEquals(41.0, response.getTotalPrice()); // 21.0 + 20.0
+
+
+        when(productRepository.findAllById(new HashSet<>(Arrays.asList(100L, 200L))))
+                .thenReturn(Arrays.asList(product1, product2));
+
+        CartPageResponse response = cartService.getCartPageByUserId(usDetails);
+
+        assertNotNull(response);
+        assertEquals(2, response.getItems().size());
+
+        CartItemResponse item1 = response.getItems().get(0);
+        assertEquals(100L, item1.getProductId());
+        assertEquals("Product 1", item1.getName());
+        assertEquals(2, item1.getQuantity());
+        assertEquals(10.185, item1.getPrice());
+        assertEquals(20.37, item1.getTotalPrice());
+        assertEquals(2, item1.getAvailableStock());
+
+        CartItemResponse item2 = response.getItems().get(1);
+        assertEquals(200L, item2.getProductId());
+        assertEquals("Product 2", item2.getName());
+        assertEquals(1, item2.getQuantity());
+        assertEquals(20.0, item2.getPrice());
+        assertEquals(20.0, item2.getTotalPrice());
+        assertEquals(1, item2.getAvailableStock());
+
+        assertEquals(3, response.getTotalItems());
+        assertEquals(40.37, response.getTotalPrice());
     }
 
-
-    @Test
-    void getCartPageByUserId_singleItemWithZeroStock_calculatesCorrectly() {
-        // given
-        Product outOfStockProduct = new Product();
-        outOfStockProduct.setId(300L);
-        outOfStockProduct.setName("Out of Stock");
-…        assertEquals(15.0, response.getTotalPrice()); // цена всё равно считается
-    }*/
 }
