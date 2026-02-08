@@ -91,44 +91,6 @@ public class OrderService {
         Long ordersNumber = orders.getId();
         emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
     }
-    /*@Transactional
-    public void createOrder(Long userId) {
-
-
-        List<CartItem> cartItemsNotInStock = cartRepository.findCartItemsNotInStock(userId);
-        if (!cartItemsNotInStock.isEmpty()) {
-            throw new OutOfStockProductException("Не хватает товара для оформления заказа. Уменьшите количество товара в соответствие с доступным остатком.");
-        }
-
-        List<CartItem> cartItems = cartService.getAllUserCartItems(userId);
-        if (cartItems.isEmpty()) {
-            throw new CartIsEmptyException("Корзина пуста. Добавьте товары в корзину перед оформлением заказа");
-        }
-
-        Map<Long, CartItem> mappedCartItemsToProductIds = cartService.mapCartItemsToProductIds(cartItems);
-        List<Product> productsByUserCartItems = cartService.getProductsByUserCartItems(mappedCartItemsToProductIds);
-
-        List<OrderItem> orderItems = productsToOrderItems(productsByUserCartItems, mappedCartItemsToProductIds);
-
-
-        Orders orders = new Orders();
-        Double orderTotalPrice = getOrderTotalPrice(orderItems);
-        orders.setTotalPrice(orderTotalPrice);
-        orders.setOrderItems(orderItems);
-        orders.setUser(userService.getUserById(userId));
-        orders.setCreatedAt(LocalDateTime.now());
-
-
-        List<Product> decreasedQuantityProducts = decreaseProductQuantity(productsByUserCartItems, mappedCartItemsToProductIds);
-        productService.updateProducts(decreasedQuantityProducts);
-        cartService.deleteAllUserCartItems(userId);
-        orderRepository.save(orders);
-
-        List<OrderConfirmationToEmailResponse> orderConfirmItems = productsToOrderConfirmItems(productsByUserCartItems, mappedCartItemsToProductIds);
-        String userEmail = userService.getUserById(userId).getEmail();
-        Long ordersNumber = orders.getId();
-        emailService.sendOrderConfirmation(userEmail, orderTotalPrice, ordersNumber, orderConfirmItems);
-    }*/
 
     private Double getOrderTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream().mapToDouble(OrderItem::getTotalPrice).sum();
@@ -171,13 +133,4 @@ public class OrderService {
         Long productId = product.getId();
         return mappedCartItemsToProductIds.get(productId);
     }
-    //выполнить как транзакцию
-    //получить все товары из корзины
-
-    //выбросить исключение если на складе остатков меньше чем в корзине
-    //проверить остатки
-    //очистить корзину
-    //уменьшить остатки на складе
-
-    //отправка письма на почту
 }
