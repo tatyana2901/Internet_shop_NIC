@@ -88,7 +88,6 @@ class OrderServiceTest {
 
     @Test
     void createOrder_ShouldCreateOrderSuccessfully() {
-        // Arrange
         Long userId = 1L;
         List<CartItem> cartItems = Arrays.asList(cartItem);
         Map<Long, CartItem> cartItemsMap = new HashMap<>();

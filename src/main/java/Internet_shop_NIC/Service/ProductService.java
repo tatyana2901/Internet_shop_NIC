@@ -3,6 +3,7 @@ package Internet_shop_NIC.Service;
 import Internet_shop_NIC.DTO.ProductCatalogResponse;
 import Internet_shop_NIC.DTO.ProductListingResponse;
 import Internet_shop_NIC.Entity.Product;
+import Internet_shop_NIC.Exception.ProductNotFoundException;
 import Internet_shop_NIC.Mapper.ProductListingResponseMapper;
 import Internet_shop_NIC.Repository.ProductRepository;
 import Internet_shop_NIC.Security.UsDetails;
@@ -33,7 +34,9 @@ public class ProductService {
             } else {
                 products = productRepository.findProductsByCategoryAndSubcategorySortedOnBasePriceASC(categoryId);
             }
-
+            if (products.isEmpty()) {
+                throw new ProductNotFoundException("No product by category and subcategory");
+            }
             List<ProductListingResponse> dtoProducts = products
                     .stream()
                     .map(p -> productListingResponseMapper.toProductListingResponse(p, usDetails))
@@ -47,6 +50,9 @@ public class ProductService {
 
     public List<ProductCatalogResponse> getDirectProductsByCategory(Long categoryId) {
         List<Product> products = productRepository.findAllByCategoriesId(categoryId);
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No direct product by category");
+        }
         return products
                 .stream()
                 .map(p -> new ProductCatalogResponse(p.getName(), p.getId()))
@@ -54,9 +60,7 @@ public class ProductService {
     }
 
     public void updateProducts(List<Product> products) {
-
         productRepository.saveAll(products);
-
     }
 
 
