@@ -12,7 +12,6 @@ public class RegistrationRequest {
     @NotEmpty(message = "Фамилия не должна быть пустой")
     @Size(min = 2, max = 50, message = "Фамилия должна быть от 2 до 50 символов длиной")
     private String last_name;
-    //ДОБАВИТЬ ВАЛИДАЦИЮ
     @NotEmpty(message = "Введите email!")
     private String email;
     @NotEmpty(message = "Введите пароль!")

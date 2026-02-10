@@ -21,7 +21,7 @@ public class UserService {
 
 
     @Autowired
-    public UserService(UserRepository userRepository, RegistrationRequestMapper registrationRequestMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RegistrationRequestMapper registrationRequestMapper) {
         this.userRepository = userRepository;
         this.registrationRequestMapper = registrationRequestMapper;
     }
