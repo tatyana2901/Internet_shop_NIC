@@ -6,7 +6,6 @@ import Internet_shop_NIC.Exception.UserAlreadyExistException;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapper;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapperImpl;
 import Internet_shop_NIC.Repository.UserRepository;
-import Internet_shop_NIC.Security.UsDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,15 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -52,8 +50,8 @@ public class UserServiceTest {
         request = new RegistrationRequest();
         request.setEmail("test@example.com");
         request.setPassword("password123");
-        request.setFirst_name("John");
-        request.setLast_name("Doe");
+        request.setFirstName("John");
+        request.setLastName("Doe");
     }
 
     @Test
@@ -80,9 +78,8 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-   /* @Test
-    @DisplayName("Успешная регистрация пользователя с корректным маппингом данных")
-    void register_ValidRegistrationRequest_CreatesUserWithCorrectData() {
+    @Test
+    void register_ShouldCreateUserWithCorrectData() {
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
 
         userService.register(request);
@@ -92,21 +89,17 @@ public class UserServiceTest {
 
         Users savedUser = userCaptor.getValue();
 
-        // Проверяем корректность маппинга через реальный маппер
-        assertEquals(testRegRequest.getEmail(), savedUser.getEmail());
-        assertEquals(testRegRequest.getFirstName(), savedUser.getFirstName());
-        assertEquals(testRegRequest.getLastName(), savedUser.getLastName());
-        assertEquals(testRegRequest.getPhoneNumber(), savedUser.getPhoneNumber());
+        assertEquals(request.getEmail(), savedUser.getEmail());
+        assertEquals(request.getFirstName(), savedUser.getFirstName());
+        assertEquals(request.getLastName(), savedUser.getLastName());
 
-        // Проверяем, что пароль зашифрован (не равен исходному)
-        assertNotEquals(testRegRequest.getPassword(), savedUser.getPassword());
-        assertTrue(passwordEncoder.matches(testRegRequest.getPassword(), savedUser.getPassword()));
+        assertNotEquals(request.getPassword(), savedUser.getPassword());
+        assertTrue(passwordEncoder.matches(request.getPassword(), savedUser.getPassword()));
 
-        verify(userRepository).existsByEmail(testRegRequest.getEmail());
-    }*/
+        verify(userRepository).existsByEmail(request.getEmail());
+    }
 
     @Test
-    @DisplayName("Регистрация с существующим email выбрасывает исключение")
     void register_ShouldThrowUserAlreadyExistExceptionIfEmailAlreadyExists() {
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 

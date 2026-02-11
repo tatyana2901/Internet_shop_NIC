@@ -7,31 +7,31 @@ import javax.validation.constraints.Size;
 public class RegistrationRequest {
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов длиной")
-    private String first_name;
+    private String firstName;
 
     @NotEmpty(message = "Фамилия не должна быть пустой")
     @Size(min = 2, max = 50, message = "Фамилия должна быть от 2 до 50 символов длиной")
-    private String last_name;
+    private String lastName;
     @NotEmpty(message = "Введите email!")
     private String email;
     @NotEmpty(message = "Введите пароль!")
     private String password;
 
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
