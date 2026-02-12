@@ -28,5 +28,3 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findCartItemsNotInStock(@Param("userId") Long userId);
 
 }
-
-//select ci.id, stock_quantity from cart_item ci left join product p on product_id = p.id where user_id = 4 and ci.quantity>p.stock_quantity or p.stock_quantity is null;

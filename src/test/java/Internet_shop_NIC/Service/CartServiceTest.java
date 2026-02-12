@@ -23,14 +23,23 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
@@ -173,7 +182,7 @@ class CartServiceTest {
         request.setProductId(10L);
         request.setQuantity(12);
 
-        ProductNotFoundException exception = assertThrows(
+        assertThrows(
                 ProductNotFoundException.class,
                 () -> cartService.updateCartItemQuantity(request, usDetails)
         );
@@ -233,10 +242,6 @@ class CartServiceTest {
 
         when(userService.getUserId(usDetails)).thenReturn(1L);
         when(cartRepository.findAllByUserId(1L)).thenReturn(Arrays.asList(cartItem1, cartItem2));
-
-        Map<Long, CartItem> cartItemsMap = Stream.of(cartItem1, cartItem2)
-                .collect(Collectors.toMap(CartItem::getProductId, ci -> ci));
-
 
         when(productRepository.findAllById(new HashSet<>(Arrays.asList(100L, 200L))))
                 .thenReturn(Arrays.asList(product1, product2));

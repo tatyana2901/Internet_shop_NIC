@@ -3,7 +3,6 @@ package Internet_shop_NIC.Repository;
 
 import Internet_shop_NIC.Entity.Product;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -56,8 +55,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByCategoryAndSubcategorySortedOnBasePriceDESC(@Param("categoryId") Long id);
 
 
-
-
-//пришлось сделать два запроса из-за проблем с сортировкой - порядок сортировки невозможно подставить как параметр
 
 }

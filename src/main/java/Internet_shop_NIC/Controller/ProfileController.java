@@ -23,10 +23,10 @@ public class ProfileController {
     }
 
     @GetMapping("/me")
-    @SecurityRequirement(name = "BearerAuth") //Swagger
+    @SecurityRequirement(name = "BearerAuth")
     public CurrentUserResponse getCurrentUser(@AuthenticationPrincipal
                                               @Parameter(hidden = true)
-                                              UsDetails usDetails) //Swagger
+                                              UsDetails usDetails)
     {
         return currentUserResponseMapper.toCurrentUserResponse(usDetails);
     }

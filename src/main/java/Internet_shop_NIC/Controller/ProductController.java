@@ -8,7 +8,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,14 +25,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-
-    //в каталоге
     @GetMapping("/categories/{categoryId}/direct_products")
     public List<ProductCatalogResponse> getProductsByCategory(@PathVariable("categoryId") Long categoryId) {
         return productService.getDirectProductsByCategory(categoryId);
     }
 
-    //в листинге
     @GetMapping("/categories/{categoryId}/products")
     @SecurityRequirement(name = "BearerAuth") //Swagger
     public List<ProductListingResponse> getAllProductsByCategory(@PathVariable("categoryId") Long categoryId,
@@ -39,7 +39,7 @@ public class ProductController {
 
         return productService.getSortedProductsByCategoryAndSubCat(categoryId, sort, usDetails);
     }
-    //товар по категории
+
 
 
 }

@@ -1,6 +1,5 @@
 package Internet_shop_NIC.Mapper;
 
-import Internet_shop_NIC.DTO.CartItemResponse;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Entity.OrderItem;
 import Internet_shop_NIC.Entity.Product;

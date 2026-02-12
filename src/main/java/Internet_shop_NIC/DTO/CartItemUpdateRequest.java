@@ -6,7 +6,7 @@ public class CartItemUpdateRequest {
     @NotNull
     private Long productId;
     @NotNull
-    private int quantity; //Обновленное количество товара в корзине
+    private int quantity;
 
     public Long getProductId() {
         return productId;

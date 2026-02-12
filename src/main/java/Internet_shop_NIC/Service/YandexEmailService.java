@@ -1,8 +1,7 @@
 package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.OrderConfirmationToEmailResponse;
-import Internet_shop_NIC.Entity.OrderItem;
-import Internet_shop_NIC.Entity.Orders;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;

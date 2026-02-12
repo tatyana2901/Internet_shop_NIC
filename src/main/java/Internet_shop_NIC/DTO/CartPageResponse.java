@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartPageResponse {
-    private CurrentUserResponse currentUserResponse;      // "Иванов А."
-    private List<CartItemResponse> items = new ArrayList<>();     // товары с галочкой
-    private Integer totalItems = 0;            // общее количество
+    private CurrentUserResponse currentUserResponse;
+    private List<CartItemResponse> items = new ArrayList<>();
+    private Integer totalItems = 0;
     private Double totalPrice = 0.0;
 
     public CartPageResponse(CurrentUserResponse currentUserResponse) {

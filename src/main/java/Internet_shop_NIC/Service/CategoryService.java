@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +36,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional // работает и без нее, но непонятно, почему
+    @Transactional
     public List<CategoryResponse> getSubCategories(Long parentId) {
         if (parentId > 0) {
             Optional<Category> categoryOptional = categoryRepository.findById(parentId);

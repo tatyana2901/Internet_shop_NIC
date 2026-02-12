@@ -1,7 +1,11 @@
 package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.OrderConfirmationToEmailResponse;
-import Internet_shop_NIC.Entity.*;
+import Internet_shop_NIC.Entity.CartItem;
+import Internet_shop_NIC.Entity.OrderItem;
+import Internet_shop_NIC.Entity.Orders;
+import Internet_shop_NIC.Entity.Product;
+import Internet_shop_NIC.Entity.Users;
 import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.UserNotExistException;
@@ -17,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service

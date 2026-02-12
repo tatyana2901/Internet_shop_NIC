@@ -2,16 +2,12 @@ package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.RegistrationRequest;
 import Internet_shop_NIC.Entity.Users;
-import Internet_shop_NIC.Exception.NewUserDataRegistrationNotProvided;
 import Internet_shop_NIC.Exception.UserAlreadyExistException;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapper;
 import Internet_shop_NIC.Repository.UserRepository;
 import Internet_shop_NIC.Security.UsDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class UserService {
@@ -54,7 +50,7 @@ public class UserService {
         return userRepository.existsById(id);
     }
 
-    public Users getUserById(Long id){;
+    public Users getUserById(Long id) {
         return userRepository.findById(id).get();
     }
 }

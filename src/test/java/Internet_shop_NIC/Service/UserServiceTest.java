@@ -6,8 +6,8 @@ import Internet_shop_NIC.Exception.UserAlreadyExistException;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapper;
 import Internet_shop_NIC.Mapper.RegistrationRequestMapperImpl;
 import Internet_shop_NIC.Repository.UserRepository;
+import Internet_shop_NIC.Security.UsDetails;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,8 +18,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -30,12 +38,13 @@ public class UserServiceTest {
 
     private RegistrationRequestMapper registrationRequestMapper;
 
-    private PasswordEncoder passwordEncoder ;
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UserService userService;
 
     private Users user;
     private RegistrationRequest request;
+    private UsDetails usDetails;
 
     @BeforeEach
     void setUp() {
@@ -45,6 +54,9 @@ public class UserServiceTest {
         ReflectionTestUtils.setField(registrationRequestMapper, "passwordEncoder", passwordEncoder);
 
         user = new Users();
+        user.setId(1L);
+        user.setEmail("test@example.com");
+
         userService = new UserService(userRepository, registrationRequestMapper);
 
         request = new RegistrationRequest();
@@ -113,82 +125,60 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-/*    @Test
-    @DisplayName("Получение ID пользователя из UsDetails")
-    void getUserId_ReturnsUserId() {
-        // Arrange
+    @Test
+    void getUserId_ShouldReturnUserId() {
         UsDetails usDetails = mock(UsDetails.class);
-        when(usDetails.getUser()).thenReturn(testUser);
+        when(usDetails.getUser()).thenReturn(user);
 
-        // Act
         Long userId = userService.getUserId(usDetails);
 
-        // Assert
         assertEquals(1L, userId);
         verify(usDetails).getUser();
     }
 
     @Test
-    @DisplayName("Получение пользователя из UsDetails")
-    void getUser_ReturnsUser() {
-        // Arrange
+    void getUser_ShouldReturnUser() {
         UsDetails usDetails = mock(UsDetails.class);
-        when(usDetails.getUser()).thenReturn(testUser);
+        when(usDetails.getUser()).thenReturn(user);
 
-        // Act
         Users result = userService.getUser(usDetails);
 
-        // Assert
-        assertEquals(testUser, result);
+        assertEquals(user, result);
         verify(usDetails).getUser();
     }
 
     @Test
-    @DisplayName("Проверка существования пользователя по ID - существует")
-    void ifUserExists_UserExists_ReturnsTrue() {
-        // Arrange
+    void ifUserExists_ShouldReturnTrueIfUserExist() {
         Long userId = 1L;
         when(userRepository.existsById(userId)).thenReturn(true);
 
-        // Act
         boolean result = userService.ifUserExists(userId);
 
-        // Assert
         assertTrue(result);
         verify(userRepository).existsById(userId);
     }
 
     @Test
-    @DisplayName("Проверка существования пользователя по ID - не существует")
-    void ifUserExists_UserNotExists_ReturnsFalse() {
-        // Arrange
+    void ifUserExists_ShouldReturnFalseIfUserNotExist() {
         Long userId = 999L;
         when(userRepository.existsById(userId)).thenReturn(false);
 
-        // Act
         boolean result = userService.ifUserExists(userId);
 
-        // Assert
         assertFalse(result);
         verify(userRepository).existsById(userId);
     }
 
     @Test
-    @DisplayName("Получение пользователя по ID")
-    void getUserById_ReturnsUser() {
-        // Arrange
+    void getUserById_ShouldReturnUser() {
         Long userId = 1L;
-        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(testUser));
+        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 
-        // Act
         Users result = userService.getUserById(userId);
 
-        // Assert
-        assertEquals(testUser, result);
+        assertEquals(user, result);
         verify(userRepository).findById(userId);
     }
-
-*/
 
 
 }

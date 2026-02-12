@@ -1,6 +1,10 @@
 package Internet_shop_NIC.Service;
 
-import Internet_shop_NIC.DTO.*;
+import Internet_shop_NIC.DTO.CartItemResponse;
+import Internet_shop_NIC.DTO.CartItemUpdateRequest;
+import Internet_shop_NIC.DTO.CartPageResponse;
+import Internet_shop_NIC.DTO.CurrentUserResponse;
+import Internet_shop_NIC.DTO.TotalAmountOfProductsInCartResponse;
 import Internet_shop_NIC.Entity.CartItem;
 import Internet_shop_NIC.Entity.Product;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
@@ -19,7 +23,6 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

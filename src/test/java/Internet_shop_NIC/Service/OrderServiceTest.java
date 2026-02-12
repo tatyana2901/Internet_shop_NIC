@@ -1,7 +1,11 @@
 package Internet_shop_NIC.Service;
 
 import Internet_shop_NIC.DTO.OrderConfirmationToEmailResponse;
-import Internet_shop_NIC.Entity.*;
+import Internet_shop_NIC.Entity.CartItem;
+import Internet_shop_NIC.Entity.OrderItem;
+import Internet_shop_NIC.Entity.Orders;
+import Internet_shop_NIC.Entity.Product;
+import Internet_shop_NIC.Entity.Users;
 import Internet_shop_NIC.Exception.CartIsEmptyException;
 import Internet_shop_NIC.Exception.OutOfStockProductException;
 import Internet_shop_NIC.Exception.UserNotExistException;
@@ -14,17 +18,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -61,7 +72,6 @@ class OrderServiceTest {
     private CartItem cartItem;
     private Product product;
     private OrderItem orderItem;
-    private OrderConfirmationToEmailResponse orderConfirmResponse;
 
     @BeforeEach
     void setUp() {

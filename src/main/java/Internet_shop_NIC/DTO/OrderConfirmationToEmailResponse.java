@@ -1,7 +1,5 @@
 package Internet_shop_NIC.DTO;
 
-import javax.persistence.Column;
-
 public class OrderConfirmationToEmailResponse {
 
     private String name;
