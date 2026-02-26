@@ -39,7 +39,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO users (id, first_name, last_name, email, password, created_at, role) VALUES
   (1, 'Алексей', 'Смирнов', 'alex.smirnov@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_USER'),
   (2, 'Мария', 'Кузнецова', 'maria.kuzn@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_USER'),
-  (3, 'Дмитрий', 'Попов', 'dmitry.popov@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_USER'),
+  (3, 'Дмитрий', 'Попов', 'dmitry.popov@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_ADMIN'),
   (4, 'Сергей', 'Иванов', 'sergey.ivanov@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_USER'),
   (5, 'Ольга', 'Морозова', 'olga.moroz@example.com', '$2a$12$apejHD6QeRSQS31JK9hnju.B.vHU8mCiMOLaeTYwrYWZpTVYBls3O', CURRENT_TIMESTAMP, 'ROLE_USER')
 ON CONFLICT (email) DO NOTHING;
