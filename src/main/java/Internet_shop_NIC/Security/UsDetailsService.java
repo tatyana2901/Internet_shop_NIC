@@ -23,12 +23,9 @@ public class UsDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println("ОБРАЩЕНИЕ К БАЗЕ ДАННЫХ!!!!! ДЛЯ ЗАГРУЗКИ ПОЛЬЗОВАТЕЛЯ");
         Optional<Users> user = userRepository.findByEmail(email);
-        System.out.println(user);
 
         if (!user.isPresent()) {
-            System.out.println("UsernameNotFoundException");
             throw new UsernameNotFoundException("User not found");
         }
 

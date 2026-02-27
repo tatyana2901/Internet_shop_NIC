@@ -59,7 +59,6 @@ public class GlobalExceptionHandler {
                 "Cart is empty",
                 "Cart is empty"
         );
-        ex.printStackTrace();
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -95,5 +94,38 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Category already exists",
+                "Category already exists"
+
+        );
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CategoryNotExistException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryNotExistException(CategoryNotExistException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Category doesn't exist",
+                "Category doesn't exist"
+
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmptyCategoryNameException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyCategoryName(EmptyCategoryNameException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Category name is empty",
+                "Category name is empty"
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

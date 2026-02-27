@@ -29,7 +29,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public JWTResponse performLogin(@RequestBody AuthenticationRequest authRequest) {
-        System.out.println(authRequest);
         return authService.logIn(authRequest);
     }
 

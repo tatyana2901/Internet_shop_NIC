@@ -1,9 +1,10 @@
-package project.Internet_shop_NIC;
+package Internet_shop_NIC.Service;
+
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class InternetShopNicApplicationTests {
+public class InternetShopNicApplicationTests {
 
 
 }

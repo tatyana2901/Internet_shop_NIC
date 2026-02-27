@@ -3,7 +3,9 @@ package Internet_shop_NIC.Service;
 import Internet_shop_NIC.DTO.CategoryResponse;
 import Internet_shop_NIC.DTO.CategoryAddingRequest;
 import Internet_shop_NIC.Entity.Category;
+import Internet_shop_NIC.Exception.CategoryAlreadyExistsException;
 import Internet_shop_NIC.Exception.CategoryNotExistException;
+import Internet_shop_NIC.Exception.EmptyCategoryNameException;
 import Internet_shop_NIC.Exception.NoRootCategoryException;
 import Internet_shop_NIC.Mapper.CategoryAddingRequestMapper;
 import Internet_shop_NIC.Mapper.CategoryResponseMapper;
@@ -52,7 +54,16 @@ public class CategoryService {
         throw new IllegalArgumentException("parentId is incorrect");
     }
 
+    @Transactional
     public void addNewCategory(CategoryAddingRequest categoryAddingRequest) {
+        String newCategoryName = categoryAddingRequest.getName();
+        if (newCategoryName == null) {
+            throw new EmptyCategoryNameException("Не запоплнено имя новой категории.");
+        }
+        if (categoryRepository.existsByName(newCategoryName)) {
+            throw new CategoryAlreadyExistsException("Категория с таким названием уже существует в системе");
+        }
+
         Category category = categoryAddingRequestMapper.toCategory(categoryAddingRequest);
 
         List<Long> parentsId = categoryAddingRequest.getParentsId();
@@ -61,16 +72,19 @@ public class CategoryService {
             category.setParents(parentCategories);
         }
 
+        categoryRepository.save(category);
+
         List<Long> childrenId = categoryAddingRequest.getChildrenId();
         if (!childrenId.isEmpty()) {
             List<Category> childrenCategories = getCategoriesFromIds(childrenId);
-            category.setChildren(childrenCategories);
-        }
 
-        categoryRepository.save(category);
+            for (Category childrenCategory : childrenCategories) {
+                childrenCategory.getParents().add(category);
+            }
+        }
     }
 
-    private List<Category> getCategoriesFromIds(List<Long> categoryIds) {
+    List<Category> getCategoriesFromIds(List<Long> categoryIds) {
         return categoryIds.stream()
                 .map(this::getCategoryById)
                 .collect(Collectors.toList());
