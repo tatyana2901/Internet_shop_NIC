@@ -1,5 +1,6 @@
 package Internet_shop_NIC.Security;
 
+import Internet_shop_NIC.Entity.Role;
 import Internet_shop_NIC.Entity.Users;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class JWTFilter extends OncePerRequestFilter {
             user.setEmail(email);
             user.setFirstName(claims.get("firstName", String.class));
             user.setLastName(claims.get("lastName", String.class));
-            user.setRole(claims.get("role", String.class));
+            user.setRole(Role.valueOf(claims.get("role", String.class)));
 
             UsDetails userDetails = new UsDetails(user);
             if (jwtService.isTokenValid(jwt)) {

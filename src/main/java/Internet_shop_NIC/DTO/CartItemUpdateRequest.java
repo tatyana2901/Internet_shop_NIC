@@ -1,5 +1,6 @@
 package Internet_shop_NIC.DTO;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CartItemUpdateRequest {

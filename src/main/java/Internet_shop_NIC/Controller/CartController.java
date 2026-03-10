@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -30,7 +32,7 @@ public class CartController {
 
     @PatchMapping
     @SecurityRequirement(name = "BearerAuth")
-    public ResponseEntity<Void> updateCartItem(@RequestBody CartItemUpdateRequest cartItemUpdateRequest,
+    public ResponseEntity<Void> updateCartItem(@Valid @RequestBody CartItemUpdateRequest cartItemUpdateRequest,
                                                @AuthenticationPrincipal
                                                @Parameter(hidden = true)
                                                UsDetails usDetails) {
